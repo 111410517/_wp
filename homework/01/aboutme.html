@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>洪晨祐的個人自我介紹 | 國立金門大學</title>
+    <!-- 引入現代 Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Noto+Sans+TC:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- 偵測是否被 iframe 嵌入以啟用原生無縫適配模式 -->
+    <script>
+        if (window.self !== window.top) {
+            document.documentElement.classList.add('iframe-mode');
+        }
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #fcfcfc; /* 與主門戶一致的紙張白 */
+            --card-bg: #ffffff;
+            --border-main: #111827; /* 極深炭黑細實線 */
+            --border-light: #e5e7eb;
+            --text-main: #111827;
+            --text-muted: #4b5563;
+            --accent: #2563eb; /* 唯一的藍色點綴 */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            border-radius: 0 !important; /* 嚴格直角 */
+        }
+
+        /* 隱藏原生滾動條，保持大氣 */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-main);
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            padding: 2rem 1rem;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        /* 內容卡片 - 極簡紙張直角 */
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-main);
+            padding: 3rem;
+            box-shadow: 8px 8px 0px rgba(17, 24, 39, 0.03); /* 直角陰影 */
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-2px);
+            box-shadow: 12px 12px 0px rgba(17, 24, 39, 0.05);
+        }
+
+        /* 頂端裝飾線 */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--border-main);
+        }
+
+        /* 頭像與標題區域 */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 1.5rem;
+        }
+
+        /* 極簡直角頭像 */
+        .avatar-glow {
+            width: 80px;
+            height: 80px;
+            background: var(--border-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid var(--border-main);
+            flex-shrink: 0;
+        }
+
+        .avatar-glow span {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--card-bg);
+        }
+
+        .title-info h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.3rem;
+            color: var(--text-main);
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: var(--accent);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subtitle::before {
+            content: '■'; /* 直角點 */
+            color: var(--accent-red, #dc2626);
+            font-size: 0.6rem;
+        }
+
+        /* 網格版面 */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-box {
+            background: transparent;
+            border: 1px solid var(--border-light);
+            padding: 1.2rem;
+            transition: all 0.2s;
+        }
+
+        .section-box:hover {
+            border-color: var(--border-main);
+            background: rgba(17, 24, 39, 0.01);
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border-left: 3px solid var(--border-main);
+            padding-left: 0.6rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* 個人資訊清單 */
+        .info-list {
+            list-style: none;
+        }
+
+        .info-list li {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 0.6rem;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dashed var(--border-light);
+            padding-bottom: 4px;
+        }
+
+        .info-list li:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+        }
+
+        .info-list li span.label {
+            color: var(--text-main);
+            font-weight: 700;
+        }
+
+        .info-list li span.value {
+            color: var(--text-main);
+        }
+
+        /* 技能徽章 */
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .skill-badge {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--border-light);
+            padding: 0.3rem 0.6rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+
+        .skill-badge:hover {
+            background: var(--border-main);
+            color: var(--card-bg);
+            border-color: var(--border-main);
+        }
+
+        /* 關於我 / 自傳 */
+        .about-text {
+            font-size: 0.95rem;
+            line-height: 1.75;
+            color: var(--text-muted);
+            text-align: justify;
+        }
+
+        .highlight-text {
+            color: var(--text-main);
+            font-weight: 700;
+        }
+
+        /* 頁尾 */
+        .footer {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 2rem;
+            border-top: 1px solid var(--border-light);
+            padding-top: 1.2rem;
+            letter-spacing: 0.5px;
+        }
+
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ========================================== */
+        /* 🔌 iframe 嵌入無縫原生化適配樣式              */
+        /* ========================================== */
+
+        .iframe-mode body {
+            padding: 10px;
+            background: transparent; /* 背景完全透明融入主門戶 */
+            align-items: flex-start;
+        }
+
+        .iframe-mode .container {
+            max-width: 100%;
+            border: none;
+            box-shadow: none;
+            padding: 0;
+            background: transparent;
+        }
+
+        .iframe-mode .container::before {
+            display: none; /* 去除頂部大裝飾線 */
+        }
+
+        .iframe-mode .container:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .iframe-mode .footer {
+            display: none; /* 去除重複頁尾，釋放垂直空間 */
+        }
+
+        /* 響應式排版調整 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem 1.5rem;
+            }
+
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .profile-grid {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- 頭像與標題 -->
+        <div class="header">
+            <div class="avatar-glow">
+                <span>祐</span>
+            </div>
+            <div class="title-info">
+                <h1>洪晨祐</h1>
+                <div class="subtitle">金門大學 資訊工程學系</div>
+            </div>
+        </div>
+
+        <!-- 網格佈局：基本資料與技能 -->
+        <div class="profile-grid">
+            <!-- 基本資料 -->
+            <div class="section-box">
+                <h2 class="section-title">基本資料</h2>
+                <ul class="info-list">
+                    <li>
+                        <span class="label">學校名稱</span>
+                        <span class="value">國立金門大學</span>
+                    </li>
+                    <li>
+                        <span class="label">就讀系所</span>
+                        <span class="value">資訊工程學系 一年級</span>
+                    </li>
+                    <li>
+                        <span class="label">學生學號</span>
+                        <span class="value">111410517</span>
+                    </li>
+                    <li>
+                        <span class="label">學習目標</span>
+                        <span class="value" style="color: var(--accent); font-weight: 700;">全棧開發與無伺服器架構</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 專業技能與興趣 -->
+            <div class="section-box">
+                <h2 class="section-title">技術與學習領域</h2>
+                <div class="skills-container">
+                    <span class="skill-badge">HTML5</span>
+                    <span class="skill-badge">CSS3 / Stylus</span>
+                    <span class="skill-badge">JavaScript (ES6+)</span>
+                    <span class="skill-badge">Node.js</span>
+                    <span class="skill-badge">Express.js</span>
+                    <span class="skill-badge">EJS Templates</span>
+                    <span class="skill-badge">Git / GitHub</span>
+                    <span class="skill-badge">Workers KV</span>
+                    <span class="skill-badge">Three.js</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 自自我介紹與目標 -->
+        <div class="section-box" style="margin-bottom: 0.5rem;">
+            <h2 class="section-title">自我介紹與學習理念</h2>
+            <p class="about-text">
+                我是 <span class="highlight-text">洪晨祐</span>，目前就讀於 <span class="highlight-text">國立金門大學資訊工程學系一年級</span>。自進入資工系以來，我對網頁開發及後端系統架構產生了極大的興趣。本課程的網頁設計實作作業（_wp）對我而言是一個充滿挑戰與收穫的旅程。
+                <br><br>
+                我致力於將現代前端極致美學與 Node.js 後端服務做完美的結合。在學習的過程中，我不僅注重「程式碼的可讀性與 DRY 原則」，也積極探索如何利用先進 of 協同開發工具來加速專案建構與系統測試，實現「 Fail Fast, Learn Faster」的工程精神。
+            </p>
+        </div>
+
+        <!-- 頁尾 -->
+        <div class="footer">
+            <p>© 2026 洪晨祐 (111410517). Designed for NQU Web Programming Course.</p>
+            <p>GitHub Repository: <a href="https://github.com/111410517/_wp" target="_blank">111410517/_wp</a></p>
+        </div>
+    </div>
+
+</body>
+</html>
