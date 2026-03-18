@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>互動式表單設計 | 國立金門大學資工系</title>
+    <!-- 引入 Outfit 與 繁體中文 Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Noto+Sans+TC:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- 偵測是否被 iframe 嵌入以啟用原生無縫適配模式 -->
+    <script>
+        if (window.self !== window.top) {
+            document.documentElement.classList.add('iframe-mode');
+        }
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #fcfcfc; /* 與主門戶一致的紙張白 */
+            --card-bg: #ffffff;
+            --border-main: #111827; /* 極深炭黑細實線 */
+            --border-light: #e5e7eb;
+            --text-main: #111827;
+            --text-muted: #4b5563;
+            --accent: #2563eb; /* 唯一的藍色點綴 */
+            --success: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            border-radius: 0 !important; /* 完全直角 */
+        }
+
+        /* 隱藏原生滾動條，保持大氣 */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-main);
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            padding: 2rem 1rem;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        /* 表單主容器 - 包浩斯極極簡直角 */
+        .form-card {
+            width: 100%;
+            max-width: 650px;
+            background: var(--card-bg);
+            border: 2px solid var(--border-main);
+            padding: 3rem;
+            box-shadow: 8px 8px 0px rgba(17, 24, 39, 0.03); /* 直角陰影 */
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .form-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 12px 12px 0px rgba(17, 24, 39, 0.05);
+        }
+
+        /* 頂部裝飾線 */
+        .form-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--border-main);
+        }
+
+        /* 標題與簡介 */
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .form-header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* 表單分頁 Tab 選項卡 - 直角邊框 */
+        .tab-menu {
+            display: flex;
+            background: var(--bg-color);
+            border: 1px solid var(--border-main);
+            padding: 0.2rem;
+            margin-bottom: 2rem;
+            gap: 0.2rem;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 0.6rem;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            background: var(--border-main);
+            color: var(--card-bg);
+        }
+
+        /* 表單內容區域 */
+        .form-section {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 欄位群組 */
+        .form-group {
+            margin-bottom: 1.4rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* 各類 Input 元件設計 */
+        .input-control {
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            padding: 0.8rem 1rem;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .input-control:focus {
+            border-color: var(--border-main);
+            border-width: 1.5px;
+            background: rgba(17, 24, 39, 0.01);
+        }
+
+        /* Select 欄位 */
+        select.input-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23111827'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1rem;
+            padding-right: 2.5rem;
+        }
+
+        select.input-control option {
+            background-color: var(--card-bg);
+            color: var(--text-main);
+        }
+
+        /* Radio & Checkbox 設計 */
+        .flex-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            margin-top: 0.3rem;
+        }
+
+        .check-label, .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            user-select: none;
+        }
+
+        .check-label input, .radio-label input {
+            appearance: none;
+            width: 1.1rem;
+            height: 1.1rem;
+            border: 1px solid var(--border-main);
+            background: var(--card-bg);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .check-label input:checked, .radio-label input:checked {
+            background-color: var(--border-main);
+            border-color: var(--border-main);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23ffffff' stroke-width='3'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M5 13l4 4L19 7'/%3E%3C/svg%3E");
+            background-size: 0.75rem;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        /* Range 滑動條 - 直角化 */
+        .range-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .range-slider {
+            flex: 1;
+            appearance: none;
+            height: 3px;
+            background: var(--border-light);
+            outline: none;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            background: var(--border-main);
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .range-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .range-value {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--border-main);
+            width: 2rem;
+            text-align: right;
+        }
+
+        /* 提交按鈕 */
+        .submit-btn {
+            width: 100%;
+            background: var(--border-main);
+            border: none;
+            color: var(--card-bg);
+            padding: 0.8rem;
+            font-size: 0.95rem;
+            font-weight: 800;
+            cursor: pointer;
+            letter-spacing: 1.5px;
+            transition: all 0.2s ease;
+            margin-top: 0.5rem;
+        }
+
+        .submit-btn:hover {
+            background: var(--text-muted);
+        }
+
+        /* 表單反饋提示 */
+        .form-message {
+            margin-top: 1.2rem;
+            padding: 0.8rem;
+            background: var(--bg-color);
+            border: 1px solid var(--border-main);
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+            text-align: center;
+        }
+
+        /* 頁尾 */
+        .footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-light);
+            padding-top: 1rem;
+        }
+
+        /* ========================================== */
+        /* 🔌 iframe 嵌入無縫原生化適配樣式              */
+        /* ========================================== */
+
+        .iframe-mode body {
+            padding: 10px;
+            background: transparent; /* 背景完全透明融入主門戶 */
+            align-items: flex-start;
+        }
+
+        .iframe-mode .form-card {
+            max-width: 100%;
+            border: none;
+            box-shadow: none;
+            padding: 0;
+            background: transparent;
+        }
+
+        .iframe-mode .form-card::before {
+            display: none; /* 去除頂部裝飾線 */
+        }
+
+        .iframe-mode .form-card:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .iframe-mode .footer {
+            display: none; /* 去除重複頁尾 */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-card">
+        <!-- 標頭 -->
+        <div class="form-header">
+            <h1>多功能互動系統</h1>
+            <p>金門大學資訊工程學系一年級 · 洪晨祐 (111410517)</p>
+        </div>
+
+        <!-- 切換分頁選單 -->
+        <div class="tab-menu">
+            <button class="tab-btn active" onclick="switchTab('login')">會員登入</button>
+            <button class="tab-btn" onclick="switchTab('register')">新手註冊</button>
+            <button class="tab-btn" onclick="switchTab('survey')">課程問卷</button>
+        </div>
+
+        <!-- 1. 登入表單 -->
+        <form id="login-form" class="form-section active" onsubmit="handleSubmit(event, '登入')">
+            <div class="form-group">
+                <label for="login-email">電子郵件 / 學號</label>
+                <input type="email" id="login-email" class="input-control" placeholder="111410517@nqu.edu.tw" required>
+            </div>
+            <div class="form-group">
+                <label for="login-password">安全密碼</label>
+                <input type="password" id="login-password" class="input-control" placeholder="請輸入密碼" required>
+            </div>
+            <button type="submit" class="submit-btn">立即登入</button>
+        </form>
+
+        <!-- 2. 註冊表單 -->
+        <form id="register-form" class="form-section" onsubmit="handleSubmit(event, '註冊')">
+            <div class="form-group">
+                <label for="reg-name">學生姓名</label>
+                <input type="text" id="reg-name" class="input-control" placeholder="例如：洪晨祐" required>
+            </div>
+            <div class="form-group">
+                <label for="reg-email">電子郵件</label>
+                <input type="email" id="reg-email" class="input-control" placeholder="yourname@gmail.com" required>
+            </div>
+            <div class="form-group">
+                <label for="reg-password">設定密碼</label>
+                <input type="password" id="reg-password" class="input-control" placeholder="最少 6 位字元" minlength="6" required>
+            </div>
+            <div class="form-group">
+                <label for="reg-birthday">生日</label>
+                <input type="date" id="reg-birthday" class="input-control" required>
+            </div>
+            <div class="form-group">
+                <label for="reg-age">年齡</label>
+                <input type="number" id="reg-age" class="input-control" placeholder="請輸入年齡" min="1" max="120" required>
+            </div>
+            <button type="submit" class="submit-btn">註冊新帳號</button>
+        </form>
+
+        <!-- 3. 問卷調查表單 -->
+        <form id="survey-form" class="form-section" onsubmit="handleSubmit(event, '問卷調查')">
+            <!-- 性別：Radio -->
+            <div class="form-group">
+                <label>生理性別</label>
+                <div class="flex-options">
+                    <label class="radio-label">
+                        <input type="radio" name="gender" value="male" checked> 男
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="gender" value="female"> 女
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="gender" value="other"> 其他
+                    </label>
+                </div>
+            </div>
+
+            <!-- 入學管道：Select -->
+            <div class="form-group">
+                <label for="entry-method">入學管道</label>
+                <select id="entry-method" class="input-control" required>
+                    <option value="">請選擇...</option>
+                    <option value="star">繁星推薦</option>
+                    <option value="apply" selected>申請入學</option>
+                    <option value="exam">分科測驗 / 分發</option>
+                    <option value="transfer">轉學考 / 其他</option>
+                </select>
+            </div>
+
+            <!-- 程式基礎自評：Range -->
+            <div class="form-group">
+                <label for="prog-skill">程式基礎自評 (0 - 100)</label>
+                <div class="range-container">
+                    <input type="range" id="prog-skill" class="range-slider" min="0" max="100" value="80" oninput="updateRangeVal(this.value)">
+                    <span id="range-val-display" class="range-value">80</span>
+                </div>
+            </div>
+
+            <!-- 興趣領域：Checkbox -->
+            <div class="form-group">
+                <label>您感興趣的資工領域 (可多選)</label>
+                <div class="flex-options">
+                    <label class="check-label">
+                        <input type="checkbox" name="interests" value="web" checked> 網頁開發
+                    </label>
+                    <label class="check-label">
+                        <input type="checkbox" name="interests" value="ai" checked> 人工智慧 / ML
+                    </label>
+                    <label class="check-label">
+                        <input type="checkbox" name="interests" value="game"> 遊戲設計
+                    </label>
+                    <label class="check-label">
+                        <input type="checkbox" name="interests" value="security"> 資訊安全
+                    </label>
+                </div>
+            </div>
+
+            <!-- 自我期許：Textarea -->
+            <div class="form-group">
+                <label for="expectations">對本學期網頁設計課程的自我期許</label>
+                <textarea id="expectations" class="input-control" rows="3" placeholder="請寫下您的想法..." required></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">送出問卷調查</button>
+        </form>
+
+        <!-- 成功反饋訊息 -->
+        <div id="feedback-msg" class="form-message">
+            🎉 表單提交成功！感謝您的參與。
+        </div>
+
+        <!-- 頁尾 -->
+        <div class="footer">
+            © 2026 國立金門大學資訊工程學系一年級 · 洪晨祐
+        </div>
+    </div>
+
+    <!-- 表單分頁切換邏輯 -->
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelectorAll('.form-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            const clickedBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => btn.innerText.includes(
+                tabId === 'login' ? '會員登入' : (tabId === 'register' ? '新手註冊' : '課程問卷')
+            ));
+            if (clickedBtn) clickedBtn.classList.add('active');
+
+            const targetForm = document.getElementById(`${tabId}-form`);
+            if (targetForm) targetForm.classList.add('active');
+
+            document.getElementById('feedback-msg').style.display = 'none';
+        }
+
+        function updateRangeVal(val) {
+            document.getElementById('range-val-display').innerText = val;
+        }
+
+        function handleSubmit(event, type) {
+            event.preventDefault();
+            const msgBox = document.getElementById('feedback-msg');
+            msgBox.innerText = `🎉 晨祐的 ${type} 表單已成功送出！(此為前端模擬提交，完全無錯誤)`;
+            msgBox.style.display = 'block';
+            
+            event.target.reset();
+            if(type === '問卷調查') {
+                updateRangeVal(80);
+            }
+        }
+    </script>
+</body>
+</html>
