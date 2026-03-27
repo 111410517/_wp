@@ -1,0 +1,14 @@
+{
+  "name": "notes_auth",
+  "version": "1.0.0",
+  "description": "帳號驗證筆記管理系統 - 練習 Session 登入與會員筆記權限管理",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "ejs": "^3.1.9",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0"
+  }
+}

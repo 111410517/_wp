@@ -1,0 +1,14 @@
+{
+  "name": "notes_publisher",
+  "version": "1.0.0",
+  "description": "進階發布與匯出筆記系統 - 支援全文檢索與將個人筆記匯出備份成 JSON 格式",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "ejs": "^3.1.9",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0"
+  }
+}

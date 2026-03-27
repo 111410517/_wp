@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>簡易筆記系統 - 發表與匯出版</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 0 20px; line-height: 1.6; }
+    h1 { color: #333; }
+    .header-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
+    .section-title { font-size: 1.3em; color: #444; border-left: 4px solid #0275d8; padding-left: 8px; margin-top: 30px; margin-bottom: 15px; }
+    .note-card { border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 5px; background: #fafafa; position: relative; }
+    .note-title { font-weight: bold; font-size: 1.2em; margin-bottom: 5px; }
+    .note-date { color: #888; font-size: 0.8em; margin-bottom: 10px; }
+    .note-content { font-size: 1em; white-space: pre-wrap; }
+    .delete-btn { position: absolute; top: 15px; right: 15px; color: #d9534f; text-decoration: none; font-size: 0.9em; }
+    .add-btn { display: inline-block; background: #0275d8; color: #fff; padding: 8px 15px; text-decoration: none; border-radius: 4px; }
+    .export-btn { display: inline-block; background: #5cb85c; color: #fff; padding: 8px 15px; text-decoration: none; border-radius: 4px; margin-left: 5px; }
+    .badge { display: inline-block; background: #ccc; font-size: 0.8em; padding: 2px 6px; border-radius: 3px; margin-left: 5px; }
+    .badge-public { background: #5cb85c; color: white; }
+    .badge-private { background: #f0ad4e; color: white; }
+    .logout-link { color: #d9534f; text-decoration: none; }
+    .search-bar { margin-bottom: 20px; display: flex; }
+    .search-input { flex-grow: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px 0 0 4px; }
+    .search-btn { padding: 8px 15px; background: #333; color: white; border: none; border-radius: 0 4px 4px 0; cursor: pointer; }
+    .clear-link { margin-left: 10px; align-self: center; color: #888; text-decoration: none; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+  <div class="header-bar">
+    <h1>📝 進階筆記本</h1>
+    <div>
+      <% if (username) { %>
+        歡迎，<strong><%= username %></strong>！ | <a href="/logout" class="logout-link">登出</a>
+      <% } else { %>
+        <a href="/login">請登入</a> | <a href="/register">註冊</a>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- 搜尋功能 -->
+  <form action="/" method="GET" class="search-bar">
+    <input type="text" name="query" class="search-input" placeholder="搜尋筆記標題或內容..." value="<%= query %>">
+    <button type="submit" class="search-btn">搜尋</button>
+    <% if (query) { %>
+      <a href="/" class="clear-link">清除搜尋</a>
+    <% } %>
+  </form>
+
+  <% if (username) { %>
+    <div style="margin-bottom: 20px;">
+      <a href="/new" class="add-btn">+ 新增筆記</a>
+      <a href="/export" class="export-btn">💾 匯出備份 (JSON)</a>
+    </div>
+  <% } else { %>
+    <p>您需要 <a href="/login">登入</a> 才能撰寫與備份屬於您的個人筆記。</p>
+  <% } %>
+
+  <% if (query) { %>
+    <p>顯示包含「<strong><%= query %></strong>」的搜尋結果：</p>
+  <% } %>
+
+  <!-- 私人筆記區塊 (僅在登入後顯示) -->
+  <% if (username) { %>
+    <div class="section-title">🔒 我的私人筆記</div>
+    <% if (privateNotes.length === 0) { %>
+      <p>無符合的私人筆記。</p>
+    <% } else { %>
+      <% privateNotes.forEach(note => { %>
+        <div class="note-card">
+          <div class="note-title"><%= note.title %> <span class="badge badge-private">私人</span></div>
+          <div class="note-date">發表日期: <%= note.createdAt %></div>
+          <div class="note-content"><%= note.content %></div>
+          <a href="/delete/<%= note.id %>" class="delete-btn" onclick="return confirm('確定要刪除這篇筆記嗎？')">刪除</a>
+        </div>
+      <% }) %>
+    <% } %>
+  <% } %>
+
+  <!-- 公共筆記區塊 -->
+  <div class="section-title">🌐 公共筆記</div>
+  <% if (publicNotes.length === 0) { %>
+    <p>目前沒有任何符合的公共筆記。</p>
+  <% } else { %>
+    <% publicNotes.forEach(note => { %>
+      <div class="note-card">
+        <div class="note-title"><%= note.title %> <span class="badge badge-public">公開</span> <span style="font-size: 0.7em; color: #666;">(作者: <%= note.owner %>)</span></div>
+        <div class="note-date">發表日期: <%= note.createdAt %></div>
+        <div class="note-content"><%= note.content %></div>
+        <% if (username && note.owner === username) { %>
+          <a href="/delete/<%= note.id %>" class="delete-btn" onclick="return confirm('確定要刪除這篇筆記嗎？')">刪除</a>
+        <% } %>
+      </div>
+    <% }) %>
+  <% } %>
+</body>
+</html>

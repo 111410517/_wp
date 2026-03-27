@@ -1,0 +1,14 @@
+{
+  "name": "notes_privacy",
+  "version": "1.0.0",
+  "description": "隱私筆記管理系統 - 支援公共(Public)與私人(Private)筆記權限劃分",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "ejs": "^3.1.9",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0"
+  }
+}
