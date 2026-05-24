@@ -1,0 +1,678 @@
+/* ==========================================================================
+   Store Theme: Swiss Bauhaus & Neobrutalism
+   Student: 洪晨祐 (111410517)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Outfit:wght@400;700;900&display=swap');
+
+:root {
+    --bg-color: #f3f2ee; /* 溫和的象牙微黃 */
+    --text-color: #000000;
+    --border-color: #000000;
+    --card-bg: #ffffff;
+    --accent-red: #dc2626; /* 包浩斯經典紅 */
+    --accent-blue: #2563eb; /* 包浩斯經典藍 */
+    --accent-yellow: #f59e0b; /* 包浩斯經典黃 */
+    --font-sans: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-mono: 'Courier New', Courier, monospace;
+}
+
+/* 全域直角硬性邊框規範 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    border-radius: 0 !important; /* 絕對無圓角，符合包浩斯幾何精神 */
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    padding-bottom: 80px;
+}
+
+/* 頂部極簡 Navbar */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background: #ffffff;
+    border-bottom: 2px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 40px;
+    z-index: 1000;
+}
+
+.brand-title {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--text-color);
+    text-decoration: none;
+    letter-spacing: 2px;
+}
+
+.nav-right {
+    display: flex;
+    gap: 10px;
+    height: 100%;
+    align-items: center;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 8px 20px;
+    border: 2px solid var(--border-color);
+    background: #ffffff;
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    height: 42px;
+    transition: all 0.1s ease;
+}
+
+.nav-link:hover {
+    background: var(--text-color);
+    color: #ffffff;
+}
+
+/* 主容器 */
+.shop-container {
+    max-width: 1100px;
+    margin: 110px auto 40px auto;
+    padding: 0 20px;
+}
+
+.shop-header {
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 15px;
+}
+
+.shop-header h1 {
+    font-size: 3rem;
+    font-weight: 900;
+    letter-spacing: -2px;
+    line-height: 1;
+    margin-bottom: 5px;
+}
+
+/* 瑞士包浩斯幾何 Hero Banner */
+.hero-banner {
+    display: flex;
+    border: 2px solid var(--border-color);
+    background: #ffffff;
+    margin-bottom: 35px;
+    box-shadow: 6px 6px 0px var(--border-color);
+}
+
+.hero-left {
+    flex: 1.3;
+    padding: 40px;
+    border-right: 2px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.hero-left h2 {
+    font-size: 2.8rem;
+    font-weight: 900;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    margin-bottom: 10px;
+}
+
+.hero-sub {
+    font-family: var(--font-mono);
+    color: var(--accent-red);
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+.hero-desc {
+    font-size: 0.95rem;
+    color: #444;
+    max-width: 550px;
+}
+
+.hero-right {
+    flex: 0.7;
+    background: #fafafa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    min-height: 220px;
+}
+
+/* 經典三原色幾何拼貼圖案 */
+.bauhaus-visual {
+    position: relative;
+    width: 150px;
+    height: 150px;
+}
+
+.b-circle {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    border-radius: 50% !important; /* 視覺圓形 */
+    background: var(--accent-blue);
+    top: 10px;
+    left: 10px;
+    mix-blend-mode: multiply;
+    opacity: 0.85;
+}
+
+.b-square {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: var(--accent-yellow);
+    bottom: 10px;
+    right: 15px;
+    mix-blend-mode: multiply;
+    opacity: 0.85;
+}
+
+.b-triangle {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+    border-bottom: 86px solid var(--accent-red);
+    top: 40px;
+    left: 45px;
+    mix-blend-mode: multiply;
+    opacity: 0.85;
+}
+
+/* 幾何互動工具列 */
+.shop-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 35px;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.search-box {
+    flex: 1;
+    min-width: 280px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 12px 20px;
+    border: 2px solid var(--border-color);
+    background: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 700;
+    outline: none;
+    transition: all 0.1s;
+}
+
+.search-box input:focus {
+    box-shadow: 4px 4px 0px var(--border-color);
+}
+
+.category-filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 12px 20px;
+    border: 2px solid var(--border-color);
+    background: #ffffff;
+    color: var(--text-color);
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.1s ease;
+}
+
+.filter-btn:hover {
+    background: #f0f0f0;
+}
+
+.filter-btn.active {
+    background: var(--text-color);
+    color: #ffffff;
+}
+
+/* 商品展示網格 */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+/* 商品卡片 - 3D 直角陰影 */
+.product-card {
+    background: #ffffff;
+    border: 2px solid var(--border-color);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 6px 6px 0px var(--border-color);
+    transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+    min-height: 420px;
+}
+
+.product-card:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 10px 10px 0px var(--border-color);
+}
+
+.product-top {
+    display: flex;
+    flex-direction: column;
+}
+
+.product-category {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accent-red);
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* 商品圖片框 */
+.product-image-box {
+    width: 100%;
+    height: 190px;
+    border: 2px solid var(--border-color);
+    margin: 15px 0;
+    background: #fafafa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.product-image-box img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image-box img {
+    transform: scale(1.05);
+}
+
+.product-title {
+    font-size: 1.2rem;
+    font-weight: 900;
+    line-height: 1.3;
+    margin-bottom: 15px;
+    letter-spacing: -0.5px;
+}
+
+/* 商品價格與按鈕列 */
+.product-price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 2px dashed #dddddd;
+    padding-top: 15px;
+    margin-top: auto;
+}
+
+.product-price {
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    font-weight: 900;
+}
+
+.btn-action {
+    background-color: var(--text-color);
+    color: #ffffff;
+    border: 2px solid var(--border-color);
+    padding: 10px 16px;
+    font-size: 0.85rem;
+    font-weight: 900;
+    cursor: pointer;
+    transition: all 0.1s ease;
+}
+
+.btn-action:hover {
+    background-color: #ffffff;
+    color: var(--text-color);
+}
+
+.btn-action.added-success {
+    background-color: var(--accent-blue) !important;
+    color: #ffffff !important;
+    border-color: var(--border-color) !important;
+}
+
+/* ==========================================================================
+   購物車頁面佈局 (cart.html)
+   ========================================================================== */
+.cart-layout {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 40px;
+    align-items: start;
+    margin-top: 20px;
+}
+
+.cart-items-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 購物車品項列 */
+.cart-item-row {
+    background: #ffffff;
+    border: 2px solid var(--border-color);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    box-shadow: 4px 4px 0px var(--border-color);
+}
+
+.cart-item-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border: 2px solid var(--border-color);
+}
+
+.cart-item-info {
+    flex: 1;
+    margin-left: 20px;
+}
+
+.cart-item-info h3 {
+    font-size: 1.15rem;
+    font-weight: 900;
+    margin-bottom: 5px;
+}
+
+/* 數量增減面板 */
+.cart-item-qty {
+    display: flex;
+    align-items: center;
+    border: 2px solid var(--border-color);
+    background: #ffffff;
+    margin: 0 20px;
+}
+
+.cart-item-qty button {
+    width: 32px;
+    height: 32px;
+    background: #ffffff;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.1s;
+}
+
+.cart-item-qty button:hover {
+    background: #eeeeee;
+}
+
+.cart-item-qty button:first-child {
+    border-right: 2px solid var(--border-color);
+}
+
+.cart-item-qty button:last-child {
+    border-left: 2px solid var(--border-color);
+}
+
+.cart-item-qty span {
+    width: 40px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.cart-item-row .cart-item-qty {
+    margin: 0 20px;
+}
+
+.cart-item-price {
+    font-family: var(--font-mono);
+    font-size: 1.15rem;
+    font-weight: 900;
+    width: 120px;
+    text-align: right;
+}
+
+/* 結帳資訊卡片 */
+.cart-summary-card {
+    background: #ffffff;
+    border: 2px solid var(--border-color);
+    padding: 30px;
+    box-shadow: 6px 6px 0px var(--border-color);
+    position: sticky;
+    top: 100px;
+}
+
+.cart-summary-card h2 {
+    font-size: 1.4rem;
+    font-weight: 900;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.summary-row.total {
+    border-top: 2px solid var(--border-color);
+    padding-top: 15px;
+    margin-top: 20px;
+    font-size: 1.3rem;
+    font-weight: 900;
+}
+
+/* ==========================================================================
+   📟 密碼學 Ledger 收據 Modal 樣式
+   ========================================================================== */
+.ledger-modal {
+    display: none;
+    position: fixed;
+    z-index: 5000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(4px);
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.ledger-modal.active {
+    opacity: 1;
+}
+
+/* 收據熱感紙本體 */
+.ledger-paper {
+    background: #fbfbf6; /* 溫潤的熱感收據偏黃白色 */
+    border: 2px solid var(--border-color);
+    width: 380px;
+    padding: 35px 25px;
+    box-shadow: 8px 8px 0px #000000;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: #111111;
+    position: relative;
+    transform: translateY(20px);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.ledger-modal.active .ledger-paper {
+    transform: translateY(0);
+}
+
+.ledger-header {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.ledger-header .brand {
+    font-size: 1.2rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+.ledger-header .subtitle {
+    font-size: 0.7rem;
+    color: #666;
+    margin: 5px 0;
+}
+
+.ledger-header .hash {
+    font-size: 0.65rem;
+    background: #e5e5e0;
+    padding: 3px 6px;
+    display: inline-block;
+}
+
+.ledger-divider {
+    text-align: center;
+    color: #888;
+    margin: 10px 0;
+    user-select: none;
+}
+
+.ledger-info {
+    line-height: 1.8;
+}
+
+.ledger-items {
+    min-height: 50px;
+    line-height: 1.8;
+}
+
+.ledger-summary .summary-row {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    margin-bottom: 8px;
+}
+
+.ledger-summary .summary-row.total {
+    border-top: 2px dashed var(--border-color);
+    padding-top: 8px;
+    font-size: 0.95rem;
+}
+
+.ledger-footer {
+    text-align: center;
+    margin-top: 15px;
+    line-height: 1.6;
+}
+
+.ledger-footer .barcode {
+    font-size: 1.2rem;
+    letter-spacing: 1.5px;
+    margin-bottom: 5px;
+}
+
+.ledger-footer .barcode-num {
+    font-size: 0.65rem;
+    color: #666;
+}
+
+.ledger-footer .signature {
+    font-size: 0.6rem;
+    color: #888;
+    margin-top: 10px;
+}
+
+/* PAID 半透明紅色鋼印 (動態加蓋) */
+.paid-stamp {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(3) rotate(-25deg);
+    font-family: var(--font-sans);
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: rgba(220, 38, 38, 0);
+    border: 5px solid rgba(220, 38, 38, 0);
+    padding: 5px 25px;
+    pointer-events: none;
+    letter-spacing: 3px;
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.paid-stamp.stamped {
+    color: rgba(220, 38, 38, 0.85);
+    border-color: rgba(220, 38, 38, 0.85);
+    transform: translate(-50%, -50%) scale(1) rotate(-12deg);
+}
+
+/* 收據下方動作列 */
+.ledger-actions {
+    margin-top: 25px;
+    display: flex;
+    gap: 15px;
+    width: 380px;
+}
+
+.ledger-actions button {
+    flex: 1;
+    font-family: var(--font-sans);
+}
+
+/* 響應式調整 */
+@media (max-width: 820px) {
+    .cart-layout {
+        grid-template-columns: 1fr;
+    }
+    .cart-summary-card {
+        position: static;
+        margin-top: 20px;
+    }
+    .hero-banner {
+        flex-direction: column;
+    }
+    .hero-left {
+        border-right: none;
+        border-bottom: 2px solid var(--border-color);
+    }
+    .navbar {
+        padding: 0 20px;
+    }
+}

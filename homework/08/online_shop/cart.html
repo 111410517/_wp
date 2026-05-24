@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>您的購物車 | 瑞士極簡 Ledger</title>
+    <!-- 引入 Playfair Display & Inter Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 頂部極簡 Navbar -->
+    <header class="navbar">
+        <a href="index.html" class="brand-title">- L C S T S -</a>
+        <div class="nav-right">
+            <a href="index.html" class="nav-link">SHOP</a>
+            <a href="cart.html" class="nav-link" id="cart-badge" style="background:#000; color:#fff;">CART (00)</a>
+        </div>
+    </header>
+
+    <main class="shop-container">
+        <div class="shop-header">
+            <h1>BAG.</h1>
+            <span style="font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 1px; color:#666;">CHECKOUT / SECURE BLOCK</span>
+        </div>
+
+        <div class="cart-layout">
+            <!-- 購物車品項列表 -->
+            <section class="cart-items-panel" id="cart-items-container">
+                <!-- 由 script.js 動態渲染 -->
+            </section>
+
+            <!-- 結帳摘要面板 -->
+            <section class="cart-summary-card">
+                <h2>ORDER SUMMARY</h2>
+                <div class="summary-row">
+                    <span>SUBTOTAL</span>
+                    <span id="summary-subtotal">NT$ 0</span>
+                </div>
+                <div class="summary-row" style="color: #dc2626;">
+                    <span>PROMO DISCOUNT</span>
+                    <span id="summary-discount">NT$ 0</span>
+                </div>
+                <div class="summary-row">
+                    <span>SHIPPING</span>
+                    <span>FREE</span>
+                </div>
+                <div class="summary-row total">
+                    <span>TOTAL</span>
+                    <span id="summary-total">NT$ 0</span>
+                </div>
+                <button class="btn-action submit-btn" id="checkout-trigger-btn" onclick="executeLedgerCheckout()" style="width: 100%; margin-top: 25px; border-radius: 0;">
+                    CONFIRM & SIGN ORDER ➔
+                </button>
+            </section>
+        </div>
+    </main>
+
+    <!-- 📟 密碼學 Ledger 電子收據 Modal (大留白 Swiss 風格) -->
+    <div id="ledger-modal" class="ledger-modal">
+        <div class="ledger-paper">
+            <div class="ledger-header">
+                <div class="brand">- L C S T S -</div>
+                <div class="subtitle">DIGITAL LEDGER RECEIPT</div>
+                <div class="hash" id="receipt-hash">TX_HASH: 0x87bf31d3...395b4bf7</div>
+            </div>
+            
+            <div class="ledger-divider">-----------------------------------------</div>
+            
+            <div class="ledger-info">
+                <div>DATE: <span id="receipt-date">2026-05-24 21:32:44</span></div>
+                <div>STATUS: CONFIRMED // BLOCK_SIGNED</div>
+            </div>
+            
+            <div class="ledger-divider">-----------------------------------------</div>
+            
+            <!-- 打字機列印區 -->
+            <div class="ledger-items" id="receipt-items"></div>
+            
+            <div class="ledger-divider">-----------------------------------------</div>
+            
+            <div class="ledger-summary">
+                <div class="summary-row">
+                    <span>SUBTOTAL</span>
+                    <span id="receipt-subtotal">NT$ 0</span>
+                </div>
+                <div class="summary-row" style="color: #dc2626; font-size: 0.75rem;">
+                    <span>TAX (0.00%)</span>
+                    <span>NT$ 0</span>
+                </div>
+                <div class="summary-row total" style="margin-top: 10px; padding-top: 10px;">
+                    <span>TOTAL PAID</span>
+                    <span id="receipt-total" style="font-size: 1.1rem;">NT$ 0</span>
+                </div>
+            </div>
+            
+            <div class="ledger-divider">=========================================</div>
+            
+            <div class="ledger-footer">
+                <div class="barcode">||||| | |||| ||| || |||||| | |||</div>
+                <div class="barcode-num" id="receipt-barcode-num">TX-87bf31d3-395b-4bf7-aad6</div>
+                <div class="signature">CRYPTOGRAPHICALLY SECURED BY L-LEDGER</div>
+            </div>
+            
+            <!-- PAID 虛擬紅泥鋼印 (動態加蓋效果) -->
+            <div class="paid-stamp" id="paid-stamp">PAID</div>
+        </div>
+        
+        <div class="ledger-actions">
+            <button onclick="downloadReceiptText()" class="btn-action">DOWNLOAD TXT</button>
+            <button onclick="closeLedgerAndReset()" class="btn-action" style="background:#000; color:#fff; border-radius: 0;">NEW ORDER ➔</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

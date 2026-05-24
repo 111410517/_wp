@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>晨祐潮流商店 | 瑞士極簡美學網格</title>
+    <!-- 引入 Outfit 與 Noto Sans TC Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 頂部極簡 Navbar -->
+    <header class="navbar">
+        <a href="index.html" class="brand-title">- L C S T S -</a>
+        <div class="nav-right">
+            <a href="index.html" class="nav-link" style="background:#000; color:#fff;">SHOP</a>
+            <a href="cart.html" class="nav-link" id="cart-badge">CART (00)</a>
+        </div>
+    </header>
+
+    <!-- 商城網格本體 -->
+    <main class="shop-container">
+        <div class="shop-header">
+            <h1>ESSENTIALS.</h1>
+            <span style="font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 1px; color:#666;">SPRING / SUMMER 2026</span>
+        </div>
+
+        <!-- 瑞士包浩斯幾何 Hero Banner -->
+        <div class="hero-banner">
+            <div class="hero-left">
+                <h2>BAUHAUS SHOP</h2>
+                <p class="hero-sub">// 幾何美學實驗室 // ESSENTIALS ONLY</p>
+                <p class="hero-desc">融合功能主義與強烈極簡線條，為日常工作桌面提供最具儀式感的幾何配件。無圓角，無妥協，純粹黑白與三原色幾何主義。</p>
+            </div>
+            <div class="hero-right">
+                <div class="bauhaus-visual">
+                    <div class="b-circle"></div>
+                    <div class="b-square"></div>
+                    <div class="b-triangle"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 幾何互動工具列 -->
+        <div class="shop-toolbar">
+            <div class="search-box">
+                <input type="text" id="product-search-input" placeholder="SEARCH PRODUCTS // 搜尋商品..." oninput="handleSearchInput()">
+            </div>
+            <div class="category-filters" id="category-filters-container">
+                <button class="filter-btn active" onclick="filterByCategory('all')">ALL</button>
+                <button class="filter-btn" onclick="filterByCategory('潮流服飾')">服飾</button>
+                <button class="filter-btn" onclick="filterByCategory('質感配件')">配件</button>
+                <button class="filter-btn" onclick="filterByCategory('生活美學')">生活</button>
+                <button class="filter-btn" onclick="filterByCategory('數碼周邊')">周邊</button>
+            </div>
+        </div>
+
+        <section class="product-grid" id="store-product-grid">
+            <!-- 商品卡片將透過 script.js 動態渲染 -->
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
