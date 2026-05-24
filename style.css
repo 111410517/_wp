@@ -1,0 +1,704 @@
+/* style.css - 瑞士包浩斯 Editorial 總門戶樣式系統 */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;600;800&display=swap');
+
+:root {
+    --border-color: #111111; /* 大師級極深炭黑細線 */
+    --border-light: #e5e7eb;
+    --font-mono: 'Courier New', Courier, monospace;
+    --font-sans: 'Inter', -apple-system, sans-serif;
+    --font-outfit: 'Outfit', sans-serif;
+    --font-serif: 'Playfair Display', Georgia, serif;
+    --bg-color: #fcfcfc; /* 紙張感溫和微灰白 */
+    --card-bg: #ffffff;
+    --text-main: #111827;
+    --text-muted: #4b5563;
+    --accent: #2563eb; /* 唯一的皇家藍點綴 */
+    --accent-red: #dc2626;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border-radius: 0 !important; /* 嚴格純直角，抹除任何 AI 圓角味 */
+}
+
+/* 自定義精細直角滾動條 */
+::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    overflow: hidden; /* 🌟 鎖定單屏無外滾動條，大氣通透 */
+    height: 100vh;
+    width: 100vw;
+    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* WebGL 置底 3D 畫布 */
+#webgl-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    pointer-events: none; /* 滑鼠穿透 */
+    opacity: 0.85;
+}
+
+/* 瑞士黃金三欄網格佈局 */
+.editorial-container {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 18vw 25vw 1fr; /* 黃金三欄非對稱比例 */
+    height: 100vh;
+    width: 100vw;
+    border: 1px solid var(--border-color);
+}
+
+@media (max-width: 1200px) {
+    .editorial-container {
+        grid-template-columns: 220px 280px 1fr;
+    }
+}
+
+/* ------------------------------------------ */
+/* 📂 第一欄：18vw 品牌元數據與學術欄           */
+/* ------------------------------------------ */
+.sidebar-brand-panel {
+    border-right: 1px solid var(--border-color);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: rgba(252, 252, 252, 0.9);
+    backdrop-filter: blur(10px);
+}
+
+.brand-header .catalog-code {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--accent-red);
+    display: block;
+    margin-bottom: 15px;
+}
+
+.brand-header h1 {
+    font-family: var(--font-serif);
+    font-size: 2.8rem;
+    font-weight: 700;
+    line-height: 0.95;
+    margin-bottom: 20px;
+    letter-spacing: -1.5px;
+}
+
+.brand-header .brand-desc {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+}
+
+.student-meta {
+    border-top: 1px solid var(--border-color);
+    padding-top: 30px;
+    margin: 40px 0;
+}
+
+.meta-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+}
+
+.meta-row .label {
+    color: var(--text-muted);
+}
+
+.meta-row .val {
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.sidebar-footer {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+/* ------------------------------------------ */
+/* 📂 第二欄：25vw 經典等寬大字重作業索引欄      */
+/* ------------------------------------------ */
+.sidebar-index-panel {
+    border-right: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.sidebar-index-panel .panel-header {
+    height: 80px;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 30px;
+    display: flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text-main);
+}
+
+.index-scroll-box {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.index-item {
+    display: flex;
+    flex-direction: column;
+    padding: 25px 30px;
+    border-bottom: 0.5px solid var(--border-light);
+    text-decoration: none;
+    color: var(--text-main);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+}
+
+.index-item:hover {
+    background: #f9f9f9;
+    padding-left: 35px;
+}
+
+.index-item.active {
+    background: var(--bg-color);
+    border-left: 4px solid var(--border-color);
+    padding-left: 35px;
+}
+
+.index-item .item-num {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--accent-red);
+    margin-bottom: 5px;
+}
+
+.index-item .item-title {
+    font-family: var(--font-outfit);
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    line-height: 1.25;
+}
+
+/* ------------------------------------------ */
+/* 📂 第三欄：1fr 展覽館大空間展示欄           */
+/* ------------------------------------------ */
+.exhibition-panel {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(15px);
+    overflow: hidden; /* 🌟 確保 iframe 與內容在內部滾動，絕不產生外層滾動條 */
+    height: 100%;
+    position: relative;
+}
+
+.tab-content {
+    display: none;
+    width: 100%;
+    height: 100%;
+    padding: 50px;
+    overflow-y: auto; /* 🌟 內部獨立滾動條，高健壯性適配 */
+    animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.exhibition-header {
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: flex-end;
+    gap: 15px;
+}
+
+.exhibition-header .exhibition-num {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--accent-red);
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.exhibition-header h2 {
+    font-family: var(--font-serif);
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin: 0;
+    line-height: 1.1;
+}
+
+.tech-tag {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    border: 0.5px solid var(--border-color);
+    padding: 4px 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+/* 00. 歡迎首頁大氣排版 */
+.welcome-hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    max-width: 900px;
+}
+
+.welcome-hero h2 {
+    font-family: var(--font-serif);
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.05;
+    margin: 15px 0 25px 0;
+    letter-spacing: -1.5px;
+}
+
+.welcome-hero .hero-sub {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 30px;
+    font-family: var(--font-outfit);
+}
+
+.welcome-hero .hero-body {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--text-muted);
+    text-align: justify;
+    margin-bottom: 40px;
+}
+
+.instruction-led {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.blink-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--accent-red);
+    border-radius: 50% !important; /* 包浩斯 LED 例外 */
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+
+/* 🔌 Iframe 封裝適配與比例縮放 */
+.iframe-wrapper {
+    width: 100%;
+    height: calc(100% - 80px);
+    border: 1px solid var(--border-color);
+    background: var(--bg-color);
+    position: relative;
+}
+
+.iframe-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent;
+}
+
+/* ------------------------------------------ */
+/* 💻 互動式沙盒樣式 (DRY 元則)                 */
+/* ------------------------------------------ */
+.sandbox-editorial {
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 80px);
+}
+
+.sandbox-control {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    background: var(--bg-color);
+}
+
+.sandbox-control label {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.select-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+.select-wrapper select {
+    width: 100%;
+    border: 1px solid var(--border-color);
+    background: #ffffff;
+    padding: 10px 15px;
+    font-family: var(--font-outfit);
+    font-size: 0.9rem;
+    font-weight: 700;
+    outline: none;
+    appearance: none;
+    cursor: pointer;
+}
+
+.select-wrapper::after {
+    content: '▼';
+    font-size: 0.7rem;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.editorial-btn {
+    background: none;
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 10px 20px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.editorial-btn:hover {
+    background: var(--border-color);
+    color: #ffffff;
+}
+
+.editorial-btn.run {
+    background: var(--border-color);
+    color: #ffffff;
+}
+
+.editorial-btn.run:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.sandbox-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    flex: 1;
+    min-height: 0; /* 🌟 強制子項目在高度限制內滾動，消滅溢出 */
+}
+
+@media (max-width: 900px) {
+    .sandbox-columns { grid-template-columns: 1fr; }
+}
+
+.editorial-pane {
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    height: 100%;
+    min-height: 0;
+}
+
+.pane-title {
+    background: var(--bg-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 10px 15px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.editorial-pane pre {
+    flex: 1;
+    overflow: auto;
+    padding: 20px;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    background: #fafafa;
+    tab-size: 4;
+}
+
+.terminal-body {
+    flex: 1;
+    overflow-y: auto;
+    background: #111111;
+    color: #38bdf8; /* 黑客藍 */
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+.terminal-prompt {
+    color: var(--accent-red);
+    font-weight: 700;
+    margin-right: 5px;
+}
+
+/* 記憶體指針面板 */
+.editorial-academic-pane {
+    margin-top: 20px;
+    border: 1px solid var(--border-color);
+    background: #ffffff;
+}
+
+.editorial-academic-pane pre {
+    padding: 20px;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.4;
+    background: #fbfbfb;
+}
+
+/* ------------------------------------------ */
+/* ☁️ Serverless 網誌系統佈局                 */
+/* ------------------------------------------ */
+.blog-layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 30px;
+    height: calc(100% - 80px);
+    min-height: 0;
+}
+
+@media (max-width: 990px) {
+    .blog-layout { grid-template-columns: 1fr; }
+}
+
+/* 左：貼文瀑布流雙欄網格 */
+.blog-feed-panel {
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    height: 100%;
+    min-height: 0;
+}
+
+.blog-feed-panel .feed-title {
+    background: var(--bg-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 15px 20px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.blog-grid-feed {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 🌟 雙欄網格，極大化橫向利用 */
+    gap: 20px;
+    background: #f9f9f9;
+}
+
+@media (max-width: 640px) {
+    .blog-grid-feed { grid-template-columns: 1fr; }
+}
+
+/* 貼文小卡片 - 極簡直角黑框 */
+.post-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.02);
+}
+
+.post-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 6px 6px 0px rgba(0,0,0,0.04);
+}
+
+.post-meta-row {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    border-bottom: 0.5px solid var(--border-light);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.post-meta-row .author {
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.post-content {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text-main);
+    text-align: justify;
+    word-break: break-all;
+    margin-bottom: 20px;
+}
+
+.post-action-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 0.5px solid var(--border-light);
+    padding-top: 10px;
+}
+
+.post-action-bar .likes-count {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    font-weight: 700;
+}
+
+/* 右：發文 & 登入面板 */
+.blog-admin-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.admin-auth-box {
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    background: #ffffff;
+}
+
+.admin-auth-box .input-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.editorial-input {
+    width: 100%;
+    border: 1px solid var(--border-color);
+    padding: 10px 15px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    outline: none;
+}
+
+.admin-auth-box .btn-row {
+    display: flex;
+    margin-top: 15px;
+    border: 1px solid var(--border-color);
+}
+
+.admin-auth-box .btn-row .editorial-btn {
+    flex: 1;
+    border: none;
+}
+
+.admin-auth-box .btn-row .editorial-btn:first-child {
+    border-right: 1px solid var(--border-color);
+}
+
+.admin-write-box {
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    background: #ffffff;
+}
+
+.editorial-textarea {
+    width: 100%;
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    outline: none;
+    resize: none;
+    margin-top: 15px;
+}
+
+.write-control-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.private-check {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* 09. 學術大報告佈局 */
+.report-container {
+    width: 100%;
+    height: calc(100% - 60px);
+    border: 1px solid var(--border-color);
+}
+
+.markdown-report-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #ffffff;
+}

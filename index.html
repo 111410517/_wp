@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swiss Bauhaus Serverless Portal | 111410517 洪晨祐</title>
+    <!-- 引入高階無襯線與襯線字體 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- 引入 Three.js 核心庫用於包浩斯 WebGL 阻尼磁吸系統 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+    <!-- 🌟 Three.js WebGL 置底 3D 幾何畫布 -->
+    <canvas id="webgl-canvas"></canvas>
+
+    <!-- 瑞士包浩斯黃金三欄網格佈局 -->
+    <div class="editorial-container">
+        
+        <!-- 📂 第一欄：18vw 品牌元數據與學術欄 -->
+        <aside class="sidebar-brand-panel">
+            <div class="brand-header">
+                <span class="catalog-code">NQU-CS-114B</span>
+                <h1>PORTFOLIO.</h1>
+                <p class="brand-desc">國立金門大學資訊工程學系<br>一年級 // 網頁設計期末整合</p>
+            </div>
+            
+            <div class="student-meta">
+                <div class="meta-row">
+                    <span class="label">STUDENT:</span>
+                    <span class="val">洪晨祐</span>
+                </div>
+                <div class="meta-row">
+                    <span class="label">ID:</span>
+                    <span class="val">111410517</span>
+                </div>
+                <div class="meta-row">
+                    <span class="label">HOST:</span>
+                    <span class="val">Cloudflare Pages</span>
+                </div>
+                <div class="meta-row">
+                    <span class="label">DB:</span>
+                    <span class="val">Workers KV</span>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <p>© 2026 HONG CHEN-YOU.</p>
+                <p>ALL RIGHTS RESERVED.</p>
+            </div>
+        </aside>
+
+        <!-- 📂 第二欄：25vw 經典等寬大字重作業索引欄 -->
+        <nav class="sidebar-index-panel">
+            <div class="panel-header">INDEX // 課程作業索引</div>
+            <div class="index-scroll-box">
+                <a href="#welcome" class="index-item active" onclick="navigateExhibition('welcome', this)">
+                    <span class="item-num">00</span>
+                    <span class="item-title">Welcome Portal // 門戶歡迎頁</span>
+                </a>
+                <a href="#aboutme" class="index-item" onclick="navigateExhibition('aboutme', this)">
+                    <span class="item-num">01</span>
+                    <span class="item-title">About Me // 個人履歷</span>
+                </a>
+                <a href="#form" class="index-item" onclick="navigateExhibition('form', this)">
+                    <span class="item-num">02</span>
+                    <span class="item-title">HCI Form // 互動式表單</span>
+                </a>
+                <a href="#jssandbox" class="index-item" onclick="navigateExhibition('jssandbox', this)">
+                    <span class="item-num">03</span>
+                    <span class="item-title">JS Core Sandbox // 基礎 JS 沙盒 [3,4]</span>
+                </a>
+                <a href="#blog" class="index-item" onclick="navigateExhibition('blog', this)">
+                    <span class="item-num">05</span>
+                    <span class="item-title">Serverless Blog // 網誌系統 [5]</span>
+                </a>
+                <a href="#jsadvanced" class="index-item" onclick="navigateExhibition('jsadvanced', this)">
+                    <span class="item-num">06</span>
+                    <span class="item-title">JS VM Memory // 進階 JS 閉包與 VM [6]</span>
+                </a>
+                <a href="#jsbackend" class="index-item" onclick="navigateExhibition('jsbackend', this)">
+                    <span class="item-num">07</span>
+                    <span class="item-title">Async Backend // 後端中間件挑戰 [7]</span>
+                </a>
+                <a href="#shop" class="index-item" onclick="navigateExhibition('shop', this)">
+                    <span class="item-num">08</span>
+                    <span class="item-title">Minimalist E-Shop // 潮流外設商城 [8]</span>
+                </a>
+                <a href="#report" class="index-item" onclick="navigateExhibition('report', this)">
+                    <span class="item-num">09</span>
+                    <span class="item-title">Technical Report // 期末大報告 [9]</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- 📂 第三欄：1fr 展覽館大空間展示欄 -->
+        <main class="exhibition-panel">
+            
+            <!-- 00. 歡迎門戶 -->
+            <div class="tab-content active" id="content-welcome">
+                <div class="welcome-hero">
+                    <span class="exhibition-num">00 / 09</span>
+                    <h2>A STUDY IN SERVERLESS & WEBGL.</h2>
+                    <p class="hero-sub">以瑞士包浩斯國際主義美學重新構築現代全棧 Web 設計。</p>
+                    <p class="hero-body">
+                        本專案挑戰了極限橫向通欄佈局，完全剔除所有 AI 甜膩漸變與圓角。背景由 Three.js 3D 幾何磁吸物理模擬器驅動，滑鼠拂過會產生平滑阻尼位移與引力拉扯；後端完全託管於 Cloudflare Workers & KV 邊緣計算伺服器。
+                        請使用左側的等寬索引選單，探索這場美學與工程大重構的融合展覽。
+                    </p>
+                    <div class="instruction-led">
+                        <span class="blink-dot"></span> INTERACTIVE MODE ACTIVE // 滑鼠在背景移動以觸發 WebGL 幾何共振
+                    </div>
+                </div>
+            </div>
+
+            <!-- 01. 個人履歷 Iframe 展示 -->
+            <div class="tab-content" id="content-aboutme">
+                <div class="exhibition-header">
+                    <span class="exhibition-num">01 / 09</span>
+                    <h2>ABOUT ME // 學生自我介紹</h2>
+                    <span class="tech-tag">SWISS BAUHAUS</span>
+                    <span class="tech-tag">IFRAME INTEGRATION</span>
+                </div>
+                <div class="iframe-wrapper">
+                    <iframe src="homework/01/aboutme.html" id="iframe-aboutme"></iframe>
+                </div>
+            </div>
+
+            <!-- 02. 表單 Iframe 展示 -->
+            <div class="tab-content" id="content-form">
+                <div class="exhibition-header">
+                    <span class="exhibition-num">02 / 09</span>
+                    <h2>HCI FORM // 互動式表單展示</h2>
+                    <span class="tech-tag">GLASSMORPHISM INTERACTION</span>
+                    <span class="tech-tag">FIELD VALIDATION</span>
+                </div>
+                <div class="iframe-wrapper">
+                    <iframe src="homework/02/form.html" id="iframe-form"></iframe>
+                </div>
+            </div>
+
+            <!-- 03. 通用 JS 沙盒容器 (DRY 原則完全實踐) -->
+            <div class="tab-content" id="content-jssandbox">
+                <div class="exhibition-header">
+                    <span class="exhibition-num" id="sandbox-exhibition-num">03 / 09</span>
+                    <h2 id="sandbox-title">JavaScript 互動式在線終端沙盒</h2>
+                    <div class="tech-badges" id="sandbox-badges">
+                        <!-- 動態插入技術標籤 -->
+                    </div>
+                </div>
+                
+                <div class="sandbox-editorial">
+                    <div class="sandbox-control">
+                        <label for="universal-js-select">SELECT SCRIPT // 選擇原創題目：</label>
+                        <div class="select-wrapper">
+                            <select id="universal-js-select" onchange="handleSandboxScriptChange()">
+                                <!-- options 將由 script.js 根據當前 Tab 動態載入，徹底消除重複代碼 -->
+                            </select>
+                        </div>
+                        <button class="editorial-btn run" onclick="runUniversalSandboxCode()">⚡ RUN CODE / 執行程式</button>
+                    </div>
+                    
+                    <div class="sandbox-columns">
+                        <div class="editorial-pane code">
+                            <div class="pane-title">SOURCE CODE // 原始碼檔案 (Read-Only)</div>
+                            <pre><code id="universal-code-display">// 請載入程式碼...</code></pre>
+                        </div>
+                        <div class="editorial-pane terminal">
+                            <div class="pane-title">TERMINAL OUTPUT // 虛擬終端輸出</div>
+                            <div class="terminal-body" id="universal-terminal-output">
+                                <span class="terminal-prompt">$</span> SELECT A FILE AND CLICK RUN...
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 記憶體模型指針分析 (僅在進階函數 Tab 且選擇 task08 時顯示) -->
+                    <div class="editorial-academic-pane" id="sandbox-academic-box" style="display:none;">
+                        <div class="pane-title">STACK & HEAP MEMORY POINTER MODEL // 記憶體模型指針分析</div>
+                        <pre class="report-content" id="sandbox-report-display"></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 05. Serverless 網誌系統 -->
+            <div class="tab-content" id="content-blog">
+                <div class="exhibition-header">
+                    <span class="exhibition-num">05 / 09</span>
+                    <h2>SERVERLESS BLOG // 邊緣網誌貼文發布</h2>
+                    <span class="tech-tag">CLOUDFLARE WORKERS</span>
+                    <span class="tech-tag">GLOBAL STATE KV</span>
+                </div>
+                
+                <div class="blog-layout">
+                    <!-- 左：貼文串 (雙欄瀑布 Grid 網格，極大化橫向利用率) -->
+                    <div class="blog-feed-panel">
+                        <div class="feed-title">PUBLIC FEED // 全球貼文串</div>
+                        <div class="blog-grid-feed" id="blog-posts-feed">
+                            <!-- JS 動態插入雙欄網格 -->
+                        </div>
+                    </div>
+                    
+                    <!-- 右：發文 & 登入面板 -->
+                    <div class="blog-admin-panel">
+                        <div class="admin-auth-box" id="blog-auth-section">
+                            <div class="panel-header">AUTHENTICATION // 系統驗證</div>
+                            <div class="input-row">
+                                <input type="text" id="blog-username" class="editorial-input" placeholder="USERNAME">
+                                <input type="password" id="blog-password" class="editorial-input" placeholder="PASSWORD">
+                            </div>
+                            <div class="btn-row">
+                                <button class="editorial-btn" onclick="executeBlogAuth('login')">LOGIN</button>
+                                <button class="editorial-btn" onclick="executeBlogAuth('register')" style="border-left:none;">REGISTER</button>
+                            </div>
+                        </div>
+                        
+                        <div class="admin-auth-box" id="blog-user-profile" style="display:none;">
+                            <div class="panel-header">USER SESSION // 當前工作會話</div>
+                            <p style="font-family: var(--font-mono); font-size: 0.85rem;">ACTIVE_USER: <span id="session-username" style="font-weight:700;">admin</span></p>
+                            <button class="editorial-btn" onclick="executeBlogLogout()" style="margin-top:10px; width:100%;">LOGOUT</button>
+                        </div>
+                        
+                        <div class="admin-write-box" style="margin-top:20px;">
+                            <div class="panel-header">PUBLISH POST // 發布全新貼文</div>
+                            <textarea id="blog-content" class="editorial-textarea" placeholder="WRITE ARTICLE CONTENT HERE..." rows="5"></textarea>
+                            <div class="write-control-row">
+                                <label class="private-check">
+                                    <input type="checkbox" id="blog-is-private"> PRIVATE POST (ONLY ME)
+                                </label>
+                                <button class="editorial-btn run" onclick="executePublishPost()">PUBLISH ➔</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 08. 商城 iframe 無縫適配 -->
+            <div class="tab-content" id="content-shop">
+                <div class="exhibition-header">
+                    <span class="exhibition-num">08 / 09</span>
+                    <h2>MINIMALIST E-SHOP // 潮流外設商城</h2>
+                    <span class="tech-tag">STREAM STATIC SERVING</span>
+                    <span class="tech-tag">PATH TRAVERSAL PROTECTION</span>
+                </div>
+                <div class="iframe-wrapper">
+                    <!-- 商城在本地 3000 端口啟動，線上無縫適配 iframe -->
+                    <iframe src="homework/08/online_shop/index.html" id="iframe-shop"></iframe>
+                </div>
+            </div>
+
+            <!-- 09. 期末大報告學術論文 -->
+            <div class="tab-content" id="content-report">
+                <div class="exhibition-header">
+                    <span class="exhibition-num">09 / 09</span>
+                    <h2>TECHNICAL REPORT // 期末整合學術報告</h2>
+                    <span class="tech-tag">V8 ESCAPE ANALYSIS</span>
+                    <span class="tech-tag">GPU BUFFER GEOMETRY</span>
+                </div>
+                <div class="report-container">
+                    <iframe src="homework/09/README.md" class="markdown-report-frame" id="iframe-report"></iframe>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
