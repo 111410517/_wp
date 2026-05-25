@@ -3,269 +3,1136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Swiss Bauhaus Serverless Portal | 111410517 洪晨祐</title>
-    <!-- 引入高階無襯線與襯線字體 -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    
-    <!-- 引入 Three.js 核心庫用於包浩斯 WebGL 阻尼磁吸系統 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <title>網頁程式設計作業統整 — 洪晨祐</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Microsoft JhengHei', sans-serif;
+            background: #f4f4f0;
+            color: #1a1a1a;
+            line-height: 1.7;
+            padding: 40px 20px;
+        }
+        * { border-radius: 0 !important; } /* 嚴格包浩斯無圓角 */
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 2px solid #1a1a1a;
+            padding: 40px;
+            box-shadow: 8px 8px 0px #1a1a1a;
+        }
+        
+        /* 瑞士包浩斯線條風格 Header */
+        header {
+            border-bottom: 2px solid #1a1a1a;
+            padding-bottom: 30px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            margin-bottom: 15px;
+        }
+        header .meta {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.6;
+        }
+        header .meta a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        header .meta a:hover {
+            text-decoration: underline;
+        }
+
+        /* 目錄 */
+        .toc {
+            border: 2px solid #1a1a1a;
+            padding: 20px;
+            margin-bottom: 40px;
+            background: #fbfbfb;
+        }
+        .toc h2 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #1a1a1a;
+            padding-bottom: 5px;
+        }
+        .toc ol {
+            padding-left: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 8px;
+        }
+        .toc ol li a {
+            color: #2563eb;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: bold;
+        }
+        .toc ol li a:hover {
+            text-decoration: underline;
+        }
+
+        /* 各作業區塊 */
+        .hw {
+            margin-bottom: 50px;
+            border-bottom: 2px solid #1a1a1a;
+            padding-bottom: 40px;
+        }
+        .hw:last-of-type {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .hw-header {
+            margin-bottom: 20px;
+        }
+        .hw-header .num {
+            font-family: monospace;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #dc2626;
+            text-transform: uppercase;
+        }
+        .hw-header h2 {
+            font-size: 1.6rem;
+            margin: 5px 0;
+            font-weight: 900;
+        }
+        .hw-header .dir {
+            display: inline-block;
+            padding: 2px 8px;
+            background: #e5e7eb;
+            font-size: 0.8rem;
+            font-family: monospace;
+            border: 1px solid #1a1a1a;
+            margin-bottom: 10px;
+        }
+        .hw-header p {
+            color: #444;
+            font-size: 0.95rem;
+        }
+
+        /* 模組格子 */
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin: 15px 0;
+        }
+        .module-item {
+            border: 1px solid #1a1a1a;
+            padding: 12px;
+            font-size: 0.88rem;
+            background: #fafafa;
+        }
+        .tech-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 10px 0 20px 0;
+        }
+        .tech-tag {
+            padding: 3px 10px;
+            border: 1px solid #1a1a1a;
+            font-size: 0.8rem;
+            background: #f3f4f6;
+            font-weight: bold;
+        }
+
+        /* Iframe 展示器 */
+        .iframe-container {
+            width: 100%;
+            height: 450px;
+            border: 2px solid #1a1a1a;
+            margin: 15px 0;
+            box-shadow: 4px 4px 0px #1a1a1a;
+        }
+        .iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* 程式碼區塊 (採用標準 pre/code 排版) */
+        pre.code-block {
+            background: #111111;
+            color: #a6d1ff;
+            padding: 15px 20px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin: 10px 0;
+            border: 1px solid #1a1a1a;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        
+        .output-box {
+            background: #e5e7eb;
+            border: 1px solid #1a1a1a;
+            padding: 10px 15px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            color: #333;
+            white-space: pre-wrap;
+        }
+
+        /* 表格 */
+        .hw-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+        .hw-table th, .hw-table td {
+            border: 1px solid #1a1a1a;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        .hw-table th {
+            background: #f3f4f6;
+        }
+
+        /* 開發問題與清單 */
+        .issue-list {
+            list-style: none;
+            margin: 15px 0;
+        }
+        .issue-list li {
+            border: 1px solid #1a1a1a;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: #fffdf5;
+            font-size: 0.9rem;
+        }
+        .issue-list li strong {
+            color: #dc2626;
+        }
+
+        /* 幾何卡片折疊面板 */
+        .hw-details {
+            border: 2px solid #1a1a1a;
+            margin-bottom: 12px;
+            background: #ffffff;
+            transition: all 0.1s ease;
+        }
+        .hw-details:hover {
+            box-shadow: 4px 4px 0px #1a1a1a;
+            transform: translate(-2px, -2px);
+        }
+        .hw-details summary {
+            padding: 12px 15px;
+            cursor: pointer;
+            font-size: 0.92rem;
+            font-weight: 900;
+            outline: none;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .hw-details summary::-webkit-details-marker {
+            display: none;
+        }
+        .hw-details summary::after {
+            content: "+";
+            font-size: 1.2rem;
+            font-weight: 900;
+        }
+        .hw-details[open] summary::after {
+            content: "−";
+        }
+        .hw-details[open] summary {
+            background: #f3f4f6;
+            border-bottom: 2px solid #1a1a1a;
+        }
+        .details-content {
+            padding: 15px;
+            background: #ffffff;
+        }
+
+        /* 新野獸派 Neobrutalism 按鈕 */
+        .neobrutalism-btn {
+            display: inline-block;
+            padding: 15px 25px;
+            background: #000000;
+            color: #ffffff !important;
+            border: 2px solid #000000;
+            font-size: 0.95rem;
+            font-weight: 900;
+            text-decoration: none;
+            letter-spacing: 1px;
+            box-shadow: 5px 5px 0px #dc2626;
+            transition: all 0.1s ease;
+            margin: 15px 0;
+        }
+        .neobrutalism-btn:hover {
+            background: #ffffff;
+            color: #000000 !important;
+            box-shadow: 2px 2px 0px #dc2626;
+            transform: translate(3px, 3px);
+        }
+
+        /* 來源與聲明 */
+        .report-section {
+            margin-top: 40px;
+            border-top: 2px solid #1a1a1a;
+            padding-top: 30px;
+        }
+        .report-section h3 {
+            margin-bottom: 15px;
+            font-size: 1.25rem;
+        }
+        .report-section ul {
+            padding-left: 20px;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #666;
+            font-size: 0.85rem;
+            border-top: 1px solid #ccc;
+            padding-top: 20px;
+        }
+    </style>
 </head>
 <body>
+<div class="container">
 
-    <!-- 🌟 Three.js WebGL 置底 3D 幾何畫布 -->
-    <canvas id="webgl-canvas"></canvas>
+    <header>
+        <h1>📘 網頁程式設計作業統整</h1>
+        <div class="meta">
+            洪晨祐 · 111410517 · 國立金門大學資訊工程系<br>
+            專案 GitHub 倉庫: <a href="https://github.com/111410517/_wp/tree/master/homework" target="_blank">111410517/_wp</a>
+        </div>
+    </header>
 
-    <!-- 瑞士包浩斯黃金三欄網格佈局 -->
-    <div class="editorial-container">
-        
-        <!-- 📂 第一欄：18vw 品牌元數據與學術欄 -->
-        <aside class="sidebar-brand-panel">
-            <div class="brand-header">
-                <span class="catalog-code">NQU-CS-114B</span>
-                <h1>PORTFOLIO.</h1>
-                <p class="brand-desc">國立金門大學資訊工程學系<br>一年級 // 網頁設計期末整合</p>
+    <!-- 目錄 -->
+    <nav class="toc">
+        <h2>📑 目錄索引</h2>
+        <ol>
+            <li><a href="#hw1">作業一：個人網站 HTML</a></li>
+            <li><a href="#hw2">作業二：表單問卷 HTML</a></li>
+            <li><a href="#hw3">作業三：Node.js 初探</a></li>
+            <li><a href="#hw4">作業四：JS 基礎語法練習</a></li>
+            <li><a href="#hw5">作業五：待辦筆記系統</a></li>
+            <li><a href="#hw6">作業六：JS 進階概念練習</a></li>
+            <li><a href="#hw7">作業七：JS 後端挑戰練習</a></li>
+            <li><a href="#hw8">作業八：Node.js 購物車網站</a></li>
+            <li><a href="#hw9">作業九：期末專案 Portal 本站</a></li>
+        </ol>
+    </nav>
+
+    <!-- HW1 -->
+    <section class="hw" id="hw1">
+        <div class="hw-header">
+            <div class="num">Homework 01</div>
+            <h2>個人網站 HTML</h2>
+            <span class="dir">homework/01/aboutme.html</span>
+            <p>一個介紹自己基本資料與技術技能的靜態個人自我介紹網頁。</p>
+        </div>
+        <div class="hw-body">
+            <div class="module-grid">
+                <div class="module-item"><strong>基本資料展示區</strong> — 顯示姓名、學號與學校資訊</div>
+                <div class="module-item"><strong>技術技能區</strong> — 呈現目前已學習與探索中的技術</div>
+                <div class="module-item"><strong>自我介紹區</strong> — 個人學習理念與未來目標</div>
+                <div class="module-item"><strong>頁尾版權資訊</strong> — 註明作者與 GitHub 連結</div>
+            </div>
+            <div class="tech-list">
+                <span class="tech-tag">HTML5</span>
+                <span class="tech-tag">CSS3</span>
+                <span class="tech-tag">霓虹發光動畫</span>
+            </div>
+            <div class="iframe-container">
+                <iframe src="homework/01/aboutme.html"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- HW2 -->
+    <section class="hw" id="hw2">
+        <div class="hw-header">
+            <div class="num">Homework 02</div>
+            <h2>表單問卷 HTML</h2>
+            <span class="dir">homework/02/form.html</span>
+            <p>一個包含會員登入、註冊與課程問卷調查的多功能互動式表單網頁。</p>
+        </div>
+        <div class="hw-body">
+            <div class="module-grid">
+                <div class="module-item"><strong>會員登入</strong> — 電子郵件與安全密碼輸入欄位</div>
+                <div class="module-item"><strong>新手註冊</strong> — 生日、年齡與基本註冊資料輸入</div>
+                <div class="module-item"><strong>課程問卷</strong> — 生理性別、入學管道、基礎自評等元件</div>
+                <div class="module-item"><strong>頁籤切換與驗證</strong> — 點選 Tab 切換與密碼長度檢查</div>
+            </div>
+            <div class="tech-list">
+                <span class="tech-tag">HTML5 Form</span>
+                <span class="tech-tag">CSS3 Card</span>
+                <span class="tech-tag">JavaScript Tab 切換</span>
+            </div>
+            <div class="iframe-container">
+                <iframe src="homework/02/form.html"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- HW3 -->
+    <section class="hw" id="hw3">
+        <div class="hw-header">
+            <div class="num">Homework 03</div>
+            <h2>Node.js 初探</h2>
+            <span class="dir">homework/03/hello.js</span>
+            <p>在 Node.js 環境中執行第一個 JavaScript 程式，輸出個人資訊與招呼語。</p>
+        </div>
+        <div class="hw-body">
+            <pre class="code-block"><code>// hello.js
+console.log("hello, world!");
+console.log("金門大學資工系一年級 洪晨祐 111410517");</code></pre>
+            <div class="output-box">
+PS D:\develop\Projects\MyProject\NQU\1_wp\homework\03> node hello.js
+hello, world!
+金門大學資工系一年級 洪晨祐 111410517
+            </div>
+        </div>
+    </section>
+
+    <!-- HW4 -->
+    <section class="hw" id="hw4">
+        <div class="hw-header">
+            <div class="num">Homework 04</div>
+            <h2>JavaScript 基礎語法練習</h2>
+            <span class="dir">homework/04/</span>
+            <p>十題 JavaScript 基礎邏輯與物件操作練習，涵蓋 if-else、迴圈、JSON 解析與物件方法中的 this 關鍵字。</p>
+        </div>
+        <div class="hw-body">
+            
+            <details class="hw-details">
+                <summary>01_score_evaluator.js — 學生成績等第判定</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>function evaluateScore(score) {
+  if (score < 0 || score > 100) {
+    return "無效的分數，分數必須介於 0 到 100 之間。";
+  }
+  let grade = "";
+  let comment = "";
+  if (score >= 90) {
+    grade = "A";
+    comment = "表現優異，繼續保持！";
+  } else if (score >= 80) {
+    grade = "B";
+    comment = "良好表現，還有進步空間。";
+  } else if (score >= 70) {
+    grade = "C";
+    comment = "普通，需要多加練習。";
+  } else if (score >= 60) {
+    grade = "D";
+    comment = "勉強及格，請多努力。";
+  } else {
+    grade = "F";
+    comment = "不及格，請重新複習課程內容。";
+  }
+  return "得分: " + score + ", 等第: " + grade + " (" + comment + ")";
+}
+console.log(evaluateScore(95));</code></pre>
+                    <div class="output-box">得分: 95, 等第: A (表現優異，繼續保持！)</div>
+                </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>02_fibonacci_loop.js — 費氏數列生成</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>function getFibonacciSeries(n) {
+  if (n <= 0) return [];
+  if (n === 1) return [0];
+  const series = [0, 1];
+  for (let i = 2; i < n; i++) {
+    const nextNum = series[i - 1] + series[i - 2];
+    series.push(nextNum);
+  }
+  return series;
+}
+console.log("前 5 項費氏數列: ", getFibonacciSeries(5));</code></pre>
+                    <div class="output-box">前 5 項費氏數列:  [ 0, 1, 1, 2, 3 ]</div>
+                </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>03_sensor_average.js — 感測器平均溫度計算</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>function calculateSensorAverage(sensorData) {
+  const validReadings = [];
+  let index = 0;
+  while (index < sensorData.length) {
+    const currentData = sensorData[index];
+    if (currentData === -999) {
+      console.log("讀取到結束訊號 -999，停止讀取。");
+      break;
+    }
+    validReadings.push(currentData);
+    index++;
+  }
+  if (validReadings.length === 0) return 0;
+  let sum = 0;
+  for (let i = 0; i < validReadings.length; i++) {
+    sum += validReadings[i];
+  }
+  const average = sum / validReadings.length;
+  console.log("有效讀取次數: " + validReadings.length);
+  return average;
+}
+console.log("平均溫度: " + calculateSensorAverage([25.3, 26.1, 24.8, -999, 28.0]));</code></pre>
+                    <div class="output-box">讀取到結束訊號 -999，停止讀取。
+有效讀取次數: 3
+平均溫度: 25.4</div>
+                </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>04_rpg_hero.js — RPG 遊戲角色系統</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>const hero = {
+  name: "亞瑟",
+  level: 1,
+  hp: 100,
+  maxHp: 100,
+  attackPower: 15,
+  isAlive: true,
+  takeDamage(damage) {
+    if (!this.isAlive) {
+      console.log(this.name + " 已經陣亡，無法再受到傷害。");
+      return;
+    }
+    this.hp -= damage;
+    console.log(this.name + " 受到 " + damage + " 點傷害！目前生命值: " + this.hp + "/" + this.maxHp);
+    if (this.hp <= 0) {
+      this.hp = 0;
+      this.isAlive = false;
+      console.log(this.name + " 不幸陣亡了！");
+    }
+  },
+  levelUp() {
+    if (!this.isAlive) {
+      console.log(this.name + " 已經陣亡，無法升級。");
+      return;
+    }
+    this.level += 1;
+    this.maxHp += 20;
+    this.hp = this.maxHp;
+    this.attackPower += 5;
+    console.log(this.name + " 升級了！目前等級: " + this.level + ", 最大生命值: " + this.maxHp);
+  }
+};
+hero.takeDamage(30);
+hero.levelUp();</code></pre>
+                    <div class="output-box">亞瑟 受到 30 點傷害！目前生命值: 70/100
+亞瑟 升級了！目前等級: 2, 最大生命值: 120</div>
+                </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>05_book_catalog.js — 圖書目錄解析 (JSON)</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>const jsonString = '{"catalogName":"科技圖書館","books":[{"id":"B01","title":"JavaScript 入門","author":"林小明","price":390}]}';
+const catalog = JSON.parse(jsonString);
+console.log("圖書館名稱: " + catalog.catalogName);
+const newBook = { id: "B04", title: "HTML5 網頁美學", author: "王大同", price: 350 };
+catalog.books.push(newBook);
+console.log("序列化 JSON: ", JSON.stringify(catalog));</code></pre>
+                    <div class="output-box">圖書館名稱: 科技圖書館
+序列化 JSON:  {"catalogName":"科技圖書館","books":[{"id":"B01","title":"JavaScript 入門","author":"林小明","price":390},{"id":"B04","title":"HTML5 網頁美學","author":"王大同","price":350}]}</div>
+                </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>06_task_manager.js — 個人任務管理器過濾</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>const tasks = [
+  { name: "準備期末報告", completed: false },
+  { name: "繳交作業四", completed: true }
+];
+function showTasksByStatus(completedStatus) {
+  for (let i = 0; i < tasks.length; i++) {
+    if (tasks[i].completed === completedStatus) {
+      console.log("- " + tasks[i].name);
+    }
+  }
+}
+showTasksByStatus(false);</code></pre>
+                    <div class="output-box">=== 未完成 任務列表 ===
+- 準備期末報告</div>
+                </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>07_tax_calculator.js — 個人所得稅計算 (Function)</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>function calculateIncomeTax(annualIncome) {
+  if (annualIncome <= 0) return 0;
+  let tax = 0;
+  if (annualIncome <= 500000) {
+    tax = annualIncome * 0.05;
+  } else if (annualIncome <= 1200000) {
+    tax = 500000 * 0.05 + (annualIncome - 500000) * 0.12;
+  } else {
+    tax = 500000 * 0.05 + 700000 * 0.12 + (annualIncome - 1200000) * 0.20;
+  }
+  return tax;
+}
+console.log("應繳所得稅: " + calculateIncomeTax(800000));</code></pre>
+                    <div class="output-box">應繳所得稅: 61000</div>
+                </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>08_weather_data.js — 天氣統計分析 (Nested JSON)</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>const weatherJson = '{"location":"金門","days":["週一","週二","週三"],"temperatures":[28.5, 31.2, 27.0]}';
+const data = JSON.parse(weatherJson);
+let maxTemp = data.temperatures[0];
+for (let i = 1; i < data.temperatures.length; i++) {
+  if (data.temperatures[i] > maxTemp) maxTemp = data.temperatures[i];
+}
+console.log("最高溫: " + maxTemp);</code></pre>
+                    <div class="output-box">最高溫: 31.2</div>
+                </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>09_grade_grouper.js — 學生成績及格分組</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>const studentGrades = [
+  { name: "小明", score: 85 },
+  { name: "小華", score: 58 }
+];
+function groupStudents(students) {
+  const passed = [];
+  const failed = [];
+  for (let i = 0; i < students.length; i++) {
+    if (students[i].score >= 60) passed.push(students[i].name);
+    else failed.push(students[i].name);
+  }
+  console.log("及格: " + passed.join(", "));
+  console.log("不及格: " + failed.join(", "));
+}
+groupStudents(studentGrades);</code></pre>
+                    <div class="output-box">及格: 小明
+不及格: 小華</div>
+                </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>10_store_inventory.js — 超商庫存管理 (this 綁定)</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>const inventorySystem = {
+  storeName: "全家便利店 (大學店)",
+  items: [
+    { name: "御飯糰", price: 35, quantity: 12 },
+    { name: "黑咖啡", price: 45, quantity: 20 }
+  ],
+  calculateTotalValue() {
+    let totalValue = 0;
+    for (let i = 0; i < this.items.length; i++) {
+      totalValue += this.items[i].price * this.items[i].quantity;
+    }
+    return totalValue;
+  },
+  restockItem(itemName, qty) {
+    for (let i = 0; i < this.items.length; i++) {
+      if (this.items[i].name === itemName) {
+        this.items[i].quantity += qty;
+        console.log(`[補貨] ${itemName} 成功補貨 ${qty} 個！`);
+      }
+    }
+  }
+};
+console.log("初始總價值: " + inventorySystem.calculateTotalValue());
+inventorySystem.restockItem("黑咖啡", 10);
+console.log("更新後總價值: " + inventorySystem.calculateTotalValue());</code></pre>
+                    <div class="output-box">初始總價值: 1320
+[補貨] 黑咖啡 成功補貨 10 個！
+更新後總價值: 1770</div>
+                </div>
+            </details>
+        </div>
+    </section>
+
+    <!-- HW5 -->
+    <section class="hw" id="hw5">
+        <div class="hw-header">
+            <div class="num">Homework 05</div>
+            <h2>待辦筆記系統 (Notes App)</h2>
+            <span class="dir">homework/05/</span>
+            <p>使用 Node.js + Express + EJS 模板引擎，並搭配 express-session 與權限判定開發的分版本筆記看板管理系統 (Notes App)。</p>
+        </div>
+        <div class="hw-body">
+            <div class="module-grid">
+                <div class="module-item"><strong>會話與帳號驗證</strong> — 結合 express-session 狀態維持，限制登入用戶管理筆記</div>
+                <div class="module-item"><strong>筆記隱私過濾</strong> — Public/Private 權限控制，私人筆記僅作者本人可看</div>
+                <div class="module-item"><strong>全文檢索搜尋</strong> — 實作後端關鍵字搜尋，動態篩選符合標題或內容的筆記</div>
+                <div class="module-item"><strong>資料備份匯出</strong> — 設定 Response Header 將個人筆記打包序列化為 JSON 檔下載</div>
             </div>
             
-            <div class="student-meta">
-                <div class="meta-row">
-                    <span class="label">STUDENT:</span>
-                    <span class="val">洪晨祐</span>
-                </div>
-                <div class="meta-row">
-                    <span class="label">ID:</span>
-                    <span class="val">111410517</span>
-                </div>
-                <div class="meta-row">
-                    <span class="label">HOST:</span>
-                    <span class="val">Cloudflare Pages</span>
-                </div>
-                <div class="meta-row">
-                    <span class="label">DB:</span>
-                    <span class="val">Workers KV</span>
-                </div>
+            <div class="tech-list">
+                <span class="tech-tag">Express.js</span>
+                <span class="tech-tag">express-session</span>
+                <span class="tech-tag">EJS Template Engine</span>
+                <span class="tech-tag">JSON Download API</span>
             </div>
 
-            <div class="sidebar-footer">
-                <p>© 2026 HONG CHEN-YOU.</p>
-                <p>ALL RIGHTS RESERVED.</p>
+            <div class="hw-header" style="margin-top: 15px;">
+                <p><strong>專案演進分版本架構：</strong></p>
             </div>
-        </aside>
+            <table class="hw-table">
+                <tr><th>版本資料夾</th><th>核心技術要素</th><th>功能說明</th></tr>
+                <tr><td><code>notes_basic/</code></td><td>原生 Express 路由</td><td>基礎筆記的新增、刪除與列表展示，無使用者概念。</td></tr>
+                <tr><td><code>notes_auth/</code></td><td>express-session</td><td>加入登入、註冊機制，用戶需要登入才能建立與刪除自己的筆記。</td></tr>
+                <tr><td><code>notes_privacy/</code></td><td>角色與擁有權驗證</td><td>支援筆記 Public/Private 設定，私人筆記僅作者本人能查看與編輯。</td></tr>
+                <tr><td><code>notes_publisher/</code></td><td>後端檢索、Header 檔案下載</td><td>支援關鍵字搜尋過濾，並提供下載個人全部筆記為 JSON 備份功能。</td></tr>
+            </table>
 
-        <!-- 📂 第二欄：25vw 經典等寬大字重作業索引欄 -->
-        <nav class="sidebar-index-panel">
-            <div class="panel-header">INDEX // 課程作業索引</div>
-            <div class="index-scroll-box">
-                <a href="#welcome" class="index-item active" onclick="navigateExhibition('welcome', this)">
-                    <span class="item-num">00</span>
-                    <span class="item-title">Welcome Portal // 門戶歡迎頁</span>
-                </a>
-                <a href="#aboutme" class="index-item" onclick="navigateExhibition('aboutme', this)">
-                    <span class="item-num">01</span>
-                    <span class="item-title">About Me // 個人履歷</span>
-                </a>
-                <a href="#form" class="index-item" onclick="navigateExhibition('form', this)">
-                    <span class="item-num">02</span>
-                    <span class="item-title">HCI Form // 互動式表單</span>
-                </a>
-                <a href="#jssandbox" class="index-item" onclick="navigateExhibition('jssandbox', this)">
-                    <span class="item-num">03</span>
-                    <span class="item-title">JS Core Sandbox // 基礎 JS 沙盒 [3,4]</span>
-                </a>
-                <a href="#blog" class="index-item" onclick="navigateExhibition('blog', this)">
-                    <span class="item-num">05</span>
-                    <span class="item-title">Serverless Blog // 網誌系統 [5]</span>
-                </a>
-                <a href="#jsadvanced" class="index-item" onclick="navigateExhibition('jsadvanced', this)">
-                    <span class="item-num">06</span>
-                    <span class="item-title">JS VM Memory // 進階 JS 閉包與 VM [6]</span>
-                </a>
-                <a href="#jsbackend" class="index-item" onclick="navigateExhibition('jsbackend', this)">
-                    <span class="item-num">07</span>
-                    <span class="item-title">Async Backend // 後端中間件挑戰 [7]</span>
-                </a>
-                <a href="#shop" class="index-item" onclick="navigateExhibition('shop', this)">
-                    <span class="item-num">08</span>
-                    <span class="item-title">Minimalist E-Shop // 潮流外設商城 [8]</span>
-                </a>
-                <a href="#report" class="index-item" onclick="navigateExhibition('report', this)">
-                    <span class="item-num">09</span>
-                    <span class="item-title">Technical Report // 期末大報告 [9]</span>
-                </a>
+            <div class="hw-header" style="margin-top: 25px;">
+                <p><strong>Notes Publisher 核心路由邏輯 (app.js 節錄)：</strong></p>
             </div>
-        </nav>
+            <pre class="code-block"><code>// 全文檢索搜尋與權限過濾路由
+app.get("/", (req, res) => {
+  const query = (req.query.q || "").toLowerCase();
+  const user = req.session.user;
+  
+  // 篩選出使用者可見的筆記：如果是 Public，或是本人所有的 Private 筆記
+  let visibleNotes = notes.filter(n => {
+    return n.public || (user && n.owner === user.username);
+  });
+  
+  // 若有搜尋關鍵字，進一步對標題或內容過濾
+  if (query) {
+    visibleNotes = visibleNotes.filter(n => 
+      n.title.toLowerCase().includes(query) || 
+      n.content.toLowerCase().includes(query)
+    );
+  }
+  res.render("index", { notes: visibleNotes, user, query });
+});
 
-        <!-- 📂 第三欄：1fr 展覽館大空間展示欄 -->
-        <main class="exhibition-panel">
+// 打包個人筆記並匯出為 JSON 下載
+app.get("/export", (req, res) => {
+  if (!req.session.user) return res.redirect("/login");
+  const userNotes = notes.filter(n => n.owner === req.session.user.username);
+  
+  res.setHeader("Content-Disposition", "attachment; filename=my_notes.json");
+  res.setHeader("Content-Type", "application/json");
+  res.send(JSON.stringify(userNotes, null, 2));
+});</code></pre>
+        </div>
+    </section>
+
+    <!-- HW6 -->
+    <section class="hw" id="hw6">
+        <div class="hw-header">
+            <div class="num">Homework 06</div>
+            <h2>JavaScript 進階概念練習</h2>
+            <span class="dir">homework/06/</span>
+            <p>十題 JavaScript 進階函式挑戰，學習 Closure、IIFE、傳址傳參考之根本差異。</p>
+        </div>
+        <div class="hw-body">
             
-            <!-- 00. 歡迎門戶 -->
-            <div class="tab-content active" id="content-welcome">
-                <div class="welcome-hero">
-                    <span class="exhibition-num">00 / 09</span>
-                    <h2>A STUDY IN SERVERLESS & WEBGL.</h2>
-                    <p class="hero-sub">以瑞士包浩斯國際主義美學重新構築現代全棧 Web 設計。</p>
-                    <p class="hero-body">
-                        本專案挑戰了極限橫向通欄佈局，完全剔除所有 AI 甜膩漸變與圓角。背景由 Three.js 3D 幾何磁吸物理模擬器驅動，滑鼠拂過會產生平滑阻尼位移與引力拉扯；後端完全託管於 Cloudflare Workers & KV 邊緣計算伺服器。
-                        請使用左側的等寬索引選單，探索這場美學與工程大重構的融合展覽。
-                    </p>
-                    <div class="instruction-led">
-                        <span class="blink-dot"></span> INTERACTIVE MODE ACTIVE // 滑鼠在背景移動以觸發 WebGL 幾何共振
-                    </div>
+            <details class="hw-details">
+                <summary>task01_callback.js — Callback 實作</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>function mathTool(num1, num2, action) {
+    return action(num1, num2);
+}
+console.log(mathTool(10, 5, (a, b) => a + b)); // 輸出: 15
+console.log(mathTool(10, 5, (a, b) => a - b)); // 輸出: 5</code></pre>
+                    <div class="output-box">15
+5</div>
                 </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>task02_iife.js — IIFE 隔離作用域</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>(function() {
+    let count = 100;
+    console.log("IIFE 內部的 count: " + count);
+})();
+// 外部嘗試存取 count 會發生 ReferenceError: count is not defined</code></pre>
+                    <div class="output-box">IIFE 內部的 count: 100</div>
+                </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>task03_arrow_map.js — Array.map() 轉換價格</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>const prices = [100, 200, 300, 400];
+const discounted = prices.map(p => p * 0.8);
+console.log("八折後價格:", discounted);</code></pre>
+                    <div class="output-box">八折後價格: [ 80, 160, 240, 320 ]</div>
+                </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>task04_array_mutation.js — 傳址修改與副作用 (Side Effect)</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>function cleanData(arr) {
+    arr.pop();
+    arr.unshift("Start");
+}
+const dataList = [1, 2, 3];
+cleanData(dataList);
+console.log("修改後的原始陣列:", dataList);</code></pre>
+                    <div class="output-box">修改後的原始陣列: [ 'Start', 1, 2 ]</div>
+                </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>task05_higher_order.js — 高階函數與閉包 (Closure)</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>const multiplier = (factor) => (n) => n * factor;
+const double = multiplier(2);
+const triple = multiplier(3);
+console.log("2 倍計算:", double(10));
+console.log("3 倍計算:", triple(10));</code></pre>
+                    <div class="output-box">2 倍計算: 20
+3 倍計算: 30</div>
+                </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>task06_custom_filter.js — 手寫自訂 Array Filter</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>function myFilter(arr, callback) {
+    const result = [];
+    for (let i = 0; i < arr.length; i++) {
+        if (callback(arr[i])) {
+            result.push(arr[i]);
+        }
+    }
+    return result;
+}
+console.log(myFilter([1, 2, 3, 4], x => x > 2));</code></pre>
+                    <div class="output-box">[ 3, 4 ]</div>
+                </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>task07_object_filter.js — filter 過濾物件陣列</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>const users = [
+    { name: "Alice", age: 25 },
+    { name: "Bob", age: 17 },
+    { name: "Charlie", age: 20 }
+];
+const adults = users.filter(user => user.age >= 18);
+console.log("成年人列表:", adults);</code></pre>
+                    <div class="output-box">成年人列表: [ { name: 'Alice', age: 25 }, { name: 'Charlie', age: 20 } ]</div>
+                </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>task08_reference_trap.js — 傳參重新賦值實驗</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>function process(a, b) {
+    a.push(99); // 傳址修改 (會影響外部)
+    b = [100];  // 重新賦值 (指向新記憶體位址，不影響外部)
+}
+let listA = [1, 2];
+let listB = [3, 4];
+process(listA, listB);
+console.log("listA (傳址修改):", listA);
+console.log("listB (重新賦值):", listB);</code></pre>
+                    <div class="output-box">listA (傳址修改): [ 1, 2, 99 ]
+listB (重新賦值): [ 3, 4 ]</div>
+                </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>task09_delay_callback.js — setTimeout 延遲非同步</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>console.log("任務開始...");
+setTimeout(() => {
+    console.log("延遲 2 秒的非同步任務完成");
+}, 2000);
+console.log("任務結束，等待非同步中...");</code></pre>
+                    <div class="output-box">任務開始...
+任務結束，等待非同步中...
+延遲 2 秒的非同步任務完成 (2秒後印出)</div>
+                </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>task10_total_price.js — reduce 累加與折扣計算</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>function calculateTotal(cart, discountFunc) {
+    const total = cart.reduce((sum, price) => sum + price, 0);
+    return discountFunc(total);
+}
+const cartPrices = [100, 250, 400];
+console.log("折後總價:", calculateTotal(cartPrices, t => t - 100));</code></pre>
+                    <div class="output-box">折後總價: 650</div>
+                </div>
+            </details>
+        </div>
+    </section>
+
+    <!-- HW7 -->
+    <section class="hw" id="hw7">
+        <div class="hw-header">
+            <div class="num">Homework 07</div>
+            <h2>JavaScript 後端挑戰練習</h2>
+            <span class="dir">homework/07/</span>
+            <p>十題針對 Express 後端語法設計的實戰練習，探討 error-first callback 錯誤優先與權限驗證。</p>
+        </div>
+        <div class="hw-body">
+            
+            <details class="hw-details">
+                <summary>challenge01_prop_access.js — 屬性存取 (點運算子與中括號)</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>const config = { port: 8080, dbUrl: "mongodb://localhost" };
+console.log("Port (點存取):", config.port);
+console.log("DB URL (中括號存取):", config["dbUrl"]);</code></pre>
+                    <div class="output-box">Port (點存取): 8080
+DB URL (中括號存取): mongodb://localhost</div>
+                </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>challenge02_destructuring.js — Request Body 解構賦值</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>const req = { body: { username: "yoyo", email: "yoyo@nqu.edu" } };
+const { username, email } = req.body;
+console.log("解構出的資料:", username, email);</code></pre>
+                    <div class="output-box">解構出的資料: yoyo yoyo@nqu.edu</div>
+                </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>challenge03_foreach_template.js — forEach 樣板字串拼接</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>const posts = [{ id: 1, title: "後端架構" }, { id: 2, title: "邊緣計算" }];
+posts.forEach(post => {
+    console.log(`&lt;li&gt;ID: ${post.id}, Title: ${post.title}&lt;/li&gt;`);
+});</code></pre>
+                    <div class="output-box">&lt;li&gt;ID: 1, Title: 後端架構&lt;/li&gt;
+&lt;li&gt;ID: 2, Title: 邊緣計算&lt;/li&gt;</div>
+                </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>challenge04_params_dict.js — 動態屬性字典 (userId)</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>const params = {};
+const key = "userId";
+params[key] = "111410517";
+console.log("動態參數字典:", params);</code></pre>
+                    <div class="output-box">動態參數字典: { userId: '111410517' }</div>
+                </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>challenge05_error_first.js — Error-First Callback 錯誤優先回呼</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>function fetchData(id, callback) {
+    if (id <= 0) {
+        return callback("無效的 ID 參數", null);
+    }
+    const fakeData = { id: id, status: "OK" };
+    callback(null, fakeData); 
+}
+fetchData(1, (err, data) => {
+    if (err) console.error("發生錯誤: " + err);
+    else console.log("取得資料成功:", data);
+});</code></pre>
+                    <div class="output-box">取得資料成功: { id: 1, status: 'OK' }</div>
+                </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>challenge06_json_parse.js — 安全 JSON.parse 解析</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>function safeParseJSON(jsonStr, callback) {
+    try {
+        const obj = JSON.parse(jsonStr);
+        callback(null, obj);
+    } catch (err) {
+        callback(err, null);
+    }
+}
+safeParseJSON('{"items":[1,2]}', (err, res) => {
+    if (err) console.log("解析失敗");
+    else console.log("解析成功，items:", res.items);
+});</code></pre>
+                    <div class="output-box">解析成功，items: [ 1, 2 ]</div>
+                </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>challenge07_fake_db.js — 模擬資料庫非同步檢索失敗</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>function fakeGet(sql, params, callback) {
+    const fakeRow = { id: 1, title: "後端非同步與錯誤優先" };
+    if (params[0] !== 1) {
+        return callback(new Error("SQL 錯誤: 找不到該筆資料 (Record Not Found)"), null);
+    }
+    callback(null, fakeRow);
+}
+fakeGet("SELECT * FROM posts WHERE id = ?", [2], (err, data) => {
+    if (err) console.log("查詢失敗，如預期拋錯：" + err.message);
+    else console.log("查詢結果:", data);
+});</code></pre>
+                    <div class="output-box">查詢失敗，如預期拋錯：SQL 錯誤: 找不到該筆資料 (Record Not Found)</div>
+                </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>challenge08_template_logic.js — 樣板字串中內嵌三元運算子</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>const userSession = { loggedIn: true, name: "晨祐" };
+console.log(`歡迎看板: ${userSession.loggedIn ? `Hello, ${userSession.name}` : "請先登入"}`);</code></pre>
+                    <div class="output-box">歡迎看板: Hello, 晨祐</div>
+                </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>challenge09_sort_slice.js — 陣列擷取與省略號處理</summary>
+                <div class="details-content">
+<pre class="code-block"><code>const textList = ["這是一篇非常長長長長長的文章", "短文"];
+const processed = textList.map(text => text.length > 10 ? text.slice(0, 10) + "..." : text);
+console.log("處理後結果:", processed);</code></pre>
+                    <div class="output-box">處理後結果: [ '這是一篇非常長長長...', '短文' ]</div>
+                </div>
+            </details>
+
+            <details class="hw-details">
+                <summary>challenge10_admin_check.js — 管理員身分安全檢查</summary>
+                <div class="details-content">
+                    <pre class="code-block"><code>function checkAdmin(role, callback) {
+    if (role !== "admin") {
+        callback(new Error("Access Denied"), null);
+        return;
+    }
+    callback(null, "Welcome");
+}
+checkAdmin("user", (err, msg) => {
+    if (err) console.log("安全攔截: " + err.message);
+    else console.log(msg);
+});</code></pre>
+                    <div class="output-box">安全攔截: Access Denied</div>
+                </div>
+            </details>
+        </div>
+    </section>
+
+    <!-- HW8 -->
+    <section class="hw" id="hw8">
+        <div class="hw-header">
+            <div class="num">Homework 08</div>
+            <h2>Node.js 購物車網站 (期中專案)</h2>
+            <span class="dir">homework/08/online_shop/</span>
+            <p>手寫 Node.js 原生 HTTP 靜態網頁伺服器，設計支援 LocalStorage 與跨分頁同步的幾何包浩斯電商商城。</p>
+        </div>
+        <div class="hw-body">
+            <div class="module-grid">
+                <div class="module-item"><strong>原生伺服器邏輯</strong> — 排除 Express，手寫路徑解析與自動判定 MIME Content-Type 檔案流分發</div>
+                <div class="module-item"><strong>安全越界防禦</strong> — 透過 <code>path.relative</code> 與 <code>BASE_DIR</code> 鋼鐵邊界比對，杜絕路徑遍歷攻擊</div>
+                <div class="module-item"><strong>跨分頁狀態即時同步</strong> — 監聽 <code>window.storage</code> 事件，當購物車在任一分頁更新時，其他頁面即時同歩更新</div>
+                <div class="module-item"><strong>密碼學 Ledger 收據</strong> — 結帳時以 async/await 非同步打字機效果列印收據明細，並加蓋 PAID 戳記</div>
+            </div>
+            
+            <div class="tech-list">
+                <span class="tech-tag">Native http, fs, path</span>
+                <span class="tech-tag">Stream & Pipe</span>
+                <span class="tech-tag">Path Traversal Defense</span>
+                <span class="tech-tag">Storage Event</span>
             </div>
 
-            <!-- 01. 個人履歷 Iframe 展示 -->
-            <div class="tab-content" id="content-aboutme">
-                <div class="exhibition-header">
-                    <span class="exhibition-num">01 / 09</span>
-                    <h2>ABOUT ME // 學生自我介紹</h2>
-                    <span class="tech-tag">SWISS BAUHAUS</span>
-                    <span class="tech-tag">IFRAME INTEGRATION</span>
-                </div>
-                <div class="iframe-wrapper">
-                    <iframe src="homework/01/aboutme.html" id="iframe-aboutme"></iframe>
-                </div>
+            <!-- 🚨 超酷炫新野獸派按鈕直接整合期中部署網址 -->
+            <div style="margin: 25px 0; text-align: center;">
+                <a href="https://midterm-shop-fkuh.onrender.com" target="_blank" class="neobrutalism-btn">
+                    ⚡ 點此開啟期中購物車線上網頁 (Render 託管) ➔
+                </a>
             </div>
 
-            <!-- 02. 表單 Iframe 展示 -->
-            <div class="tab-content" id="content-form">
-                <div class="exhibition-header">
-                    <span class="exhibition-num">02 / 09</span>
-                    <h2>HCI FORM // 互動式表單展示</h2>
-                    <span class="tech-tag">GLASSMORPHISM INTERACTION</span>
-                    <span class="tech-tag">FIELD VALIDATION</span>
-                </div>
-                <div class="iframe-wrapper">
-                    <iframe src="homework/02/form.html" id="iframe-form"></iframe>
-                </div>
+            <div class="hw-header" style="margin-top: 25px;">
+                <p><strong>期中後端伺服器核心防護代碼 (server.js 節錄)：</strong></p>
             </div>
+            <pre class="code-block"><code>// 🌟 鋼鐵防線：防止目錄越界路徑遍歷攻擊 (Path Traversal Defense)
+const relative = path.relative(BASE_DIR, targetFilePath);
+const isOut = relative.startsWith('..') || path.isAbsolute(relative);
+if (isOut) {
+    console.warn(`🚨 [安全警報] 偵測到越界路徑遍歷攻擊! 請求路徑: ${pathname}`);
+    res.writeHead(403, { "Content-Type": "text/plain; charset=utf-8" });
+    return res.end("403 Forbidden: 拒絕存取越界路徑。");
+}
 
-            <!-- 03. 通用 JS 沙盒容器 (DRY 原則完全實踐) -->
-            <div class="tab-content" id="content-jssandbox">
-                <div class="exhibition-header">
-                    <span class="exhibition-num" id="sandbox-exhibition-num">03 / 09</span>
-                    <h2 id="sandbox-title">JavaScript 互動式在線終端沙盒</h2>
-                    <div class="tech-badges" id="sandbox-badges">
-                        <!-- 動態插入技術標籤 -->
-                    </div>
-                </div>
+// 🌟 緩衝管道流分發，避免一次性讀入記憶體，杜絕 OOM 記憶體溢出崩潰
+const stream = fs.createReadStream(targetFilePath);
+stream.pipe(res);</code></pre>
+
+            <div class="hw-header" style="margin-top: 25px;">
+                <p><strong>期中開發問題分析與修正：</strong></p>
+            </div>
+            <ul class="issue-list">
+                <li><strong>問題 1：載入網頁時 CSS 樣式失效（呈現純文字排版）</strong><br>
+                * **原因**：在原生 `server.js` 中直接使用 `fs.readFile` 回傳檔案時，沒有正確設定 HTTP 回傳標頭的 `Content-Type: text/css`，導致瀏覽器安全機制拒絕載入並套用該樣式檔。<br>
+                * **修正**：建立 MIME Type 對照字典，根據檔案副檔名 `path.extname` 自動加上 `res.writeHead(200, { "Content-Type": "text/css" })`，問題順利解決。</li>
                 
-                <div class="sandbox-editorial">
-                    <div class="sandbox-control">
-                        <label for="universal-js-select">SELECT SCRIPT // 選擇原創題目：</label>
-                        <div class="select-wrapper">
-                            <select id="universal-js-select" onchange="handleSandboxScriptChange()">
-                                <!-- options 將由 script.js 根據當前 Tab 動態載入，徹底消除重複代碼 -->
-                            </select>
-                        </div>
-                        <button class="editorial-btn run" onclick="runUniversalSandboxCode()">⚡ RUN CODE / 執行程式</button>
-                    </div>
-                    
-                    <div class="sandbox-columns">
-                        <div class="editorial-pane code">
-                            <div class="pane-title">SOURCE CODE // 原始碼檔案 (Read-Only)</div>
-                            <pre><code id="universal-code-display">// 請載入程式碼...</code></pre>
-                        </div>
-                        <div class="editorial-pane terminal">
-                            <div class="pane-title">TERMINAL OUTPUT // 虛擬終端輸出</div>
-                            <div class="terminal-body" id="universal-terminal-output">
-                                <span class="terminal-prompt">$</span> SELECT A FILE AND CLICK RUN...
-                            </div>
-                        </div>
-                    </div>
+                <li><strong>問題 2：網誌圖片資源載入失敗，呈現破圖 (404)</strong><br>
+                * **原因**：圖片路徑拼接時，未正確針對 `/images/` 目錄進行精確路由配置與讀取，且使用了錯誤的圖片 MIME 解析。<br>
+                * **修正**：優化 `server.js` 路由優先權順序，遵循「**精確匹配優先、通用規則置後**」原則，手動加上對 `req.url.startsWith("/images/")` 的靜態檔案分流讀取，圖片即順利正常顯示。</li>
+            </ul>
+        </div>
+    </section>
 
-                    <!-- 記憶體模型指針分析 (僅在進階函數 Tab 且選擇 task08 時顯示) -->
-                    <div class="editorial-academic-pane" id="sandbox-academic-box" style="display:none;">
-                        <div class="pane-title">STACK & HEAP MEMORY POINTER MODEL // 記憶體模型指針分析</div>
-                        <pre class="report-content" id="sandbox-report-display"></pre>
-                    </div>
-                </div>
+    <section class="hw" id="hw9">
+        <div class="hw-header">
+            <div class="num">Homework 09</div>
+            <h2>期末專案：作業整合 Portal 網站 (本站)</h2>
+            <span class="dir">./index.html</span>
+            <p>將本學期作業 1 到作業 8 整合在同一個 Portal 網頁中。網頁採用極簡幾何排版，以 iframe 嵌入前端作業，並以靜態代碼高亮與模擬終端機輸出呈現控制台作業，確保載入效能與安全性。</p>
+        </div>
+        <div class="hw-body">
+            <div class="hw-header" style="margin-top: 15px;">
+                <p><strong>網頁設計風格：</strong></p>
+            </div>
+            <div style="font-size: 0.95rem; line-height: 1.8; color: #333; margin-bottom: 20px;">
+                <p>整個網頁的風格是用比較簡單乾淨的極簡風（幾何格子的感覺）。網頁使用溫和的灰白色當背景，卡片用純白色，框線全部都是 2px 的黑實線，而且不使用圓角，看起來比較俐落。</p>
             </div>
 
-            <!-- 05. Serverless 網誌系統 -->
-            <div class="tab-content" id="content-blog">
-                <div class="exhibition-header">
-                    <span class="exhibition-num">05 / 09</span>
-                    <h2>SERVERLESS BLOG // 邊緣網誌貼文發布</h2>
-                    <span class="tech-tag">CLOUDFLARE WORKERS</span>
-                    <span class="tech-tag">GLOBAL STATE KV</span>
-                </div>
-                
-                <div class="blog-layout">
-                    <!-- 左：貼文串 (雙欄瀑布 Grid 網格，極大化橫向利用率) -->
-                    <div class="blog-feed-panel">
-                        <div class="feed-title">PUBLIC FEED // 全球貼文串</div>
-                        <div class="blog-grid-feed" id="blog-posts-feed">
-                            <!-- JS 動態插入雙欄網格 -->
-                        </div>
-                    </div>
-                    
-                    <!-- 右：發文 & 登入面板 -->
-                    <div class="blog-admin-panel">
-                        <div class="admin-auth-box" id="blog-auth-section">
-                            <div class="panel-header">AUTHENTICATION // 系統驗證</div>
-                            <div class="input-row">
-                                <input type="text" id="blog-username" class="editorial-input" placeholder="USERNAME">
-                                <input type="password" id="blog-password" class="editorial-input" placeholder="PASSWORD">
-                            </div>
-                            <div class="btn-row">
-                                <button class="editorial-btn" onclick="executeBlogAuth('login')">LOGIN</button>
-                                <button class="editorial-btn" onclick="executeBlogAuth('register')" style="border-left:none;">REGISTER</button>
-                            </div>
-                        </div>
-                        
-                        <div class="admin-auth-box" id="blog-user-profile" style="display:none;">
-                            <div class="panel-header">USER SESSION // 當前工作會話</div>
-                            <p style="font-family: var(--font-mono); font-size: 0.85rem;">ACTIVE_USER: <span id="session-username" style="font-weight:700;">admin</span></p>
-                            <button class="editorial-btn" onclick="executeBlogLogout()" style="margin-top:10px; width:100%;">LOGOUT</button>
-                        </div>
-                        
-                        <div class="admin-write-box" style="margin-top:20px;">
-                            <div class="panel-header">PUBLISH POST // 發布全新貼文</div>
-                            <textarea id="blog-content" class="editorial-textarea" placeholder="WRITE ARTICLE CONTENT HERE..." rows="5"></textarea>
-                            <div class="write-control-row">
-                                <label class="private-check">
-                                    <input type="checkbox" id="blog-is-private"> PRIVATE POST (ONLY ME)
-                                </label>
-                                <button class="editorial-btn run" onclick="executePublishPost()">PUBLISH ➔</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="hw-header">
+                <p><strong>作業展示方式：</strong></p>
+            </div>
+            <div style="font-size: 0.95rem; line-height: 1.8; color: #333; margin-bottom: 20px;">
+                <p>為了把不同類型的作業整合進同一個網頁，我用了兩種方式來呈現：</p>
+                <ul style="padding-left: 20px; margin-top: 10px;">
+                    <li><strong>1. 用 iframe 嵌入網頁（作業 1 與作業 2）</strong><br>對於有網頁畫面的作業，像是自我介紹網頁跟互動式表單，我直接用 <code>&lt;iframe&gt;</code> 標籤把 HTML 網頁內嵌進去，這樣就能直接在 Portal 網頁裡操作。</li>
+                    <li style="margin-top: 10px;"><strong>2. 程式碼呈現與模擬終端機輸出（作業 3、4、6、7、8）</strong><br>對於純 JavaScript 的控制台程式，我把程式碼放進網頁中，並用 CSS 樣式幫程式碼的關鍵字加上顏色（像是註解灰色、關鍵字紅色、函數紫色等）。同時，我也設計了一個模擬終端機的框框，把程式在電腦上執行後的輸出結果貼在裡面，這樣不用執行也能清楚看到結果。</li>
+                </ul>
             </div>
 
-            <!-- 08. 商城 iframe 無縫適配 -->
-            <div class="tab-content" id="content-shop">
-                <div class="exhibition-header">
-                    <span class="exhibition-num">08 / 09</span>
-                    <h2>MINIMALIST E-SHOP // 潮流外設商城</h2>
-                    <span class="tech-tag">STREAM STATIC SERVING</span>
-                    <span class="tech-tag">PATH TRAVERSAL PROTECTION</span>
-                </div>
-                <div class="iframe-wrapper">
-                    <!-- 商城在本地 3000 端口啟動，線上無縫適配 iframe -->
-                    <iframe src="homework/08/online_shop/index.html" id="iframe-shop"></iframe>
-                </div>
+            <div class="hw-header">
+                <p><strong>說明與心得：</strong></p>
             </div>
-
-            <!-- 09. 期末大報告學術論文 -->
-            <div class="tab-content" id="content-report">
-                <div class="exhibition-header">
-                    <span class="exhibition-num">09 / 09</span>
-                    <h2>TECHNICAL REPORT // 期末整合學術報告</h2>
-                    <span class="tech-tag">V8 ESCAPE ANALYSIS</span>
-                    <span class="tech-tag">GPU BUFFER GEOMETRY</span>
-                </div>
-                <div class="report-container">
-                    <iframe src="homework/09/README.md" class="markdown-report-frame" id="iframe-report"></iframe>
-                </div>
+            <div style="font-size: 0.95rem; line-height: 1.8; color: #333;">
+                <p>本期末 Portal 網站的 HTML 排版、CSS 網格佈局與 iframe 安全機制均由 AI（Gemini）輔助生成。藉由這個期末整合，我掌握了多網頁在單一 Portal 頁面動態嵌入與安全性設計，並練習了手動將 JS 控制台作業轉換為高亮程式碼與模擬 Stdout 輸出以提升載入效能的靜態展示技巧。</p>
             </div>
+        </div>
+    </section>
 
-        </main>
-    </div>
+</div>
 
-    <script src="script.js"></script>
+<footer>
+    <p>© 2026 洪晨祐 111410517 金大資工網頁設計作業整合報告</p>
+</footer>
 </body>
 </html>

@@ -1,4 +1,4 @@
-# 課程：網頁設計 -- 學習筆記、習題與報告
+# 課程：網頁設計 -- 筆記、習題與報告
 
 欄位 | 內容
 -----|--------
@@ -7,5 +7,4 @@
 學號末兩碼 | 17
 教師 | [陳鍾誠](https://www.nqu.edu.tw/educsie/index.php?act=blog&code=list&ids=4)
 學校科系 | [金門大學資訊工程系](https://www.nqu.edu.tw/educsie/index.php)
-課程教材 | https://github.com/ccc114b/html2server <br/> https://www.w3schools.com/
-在線預覽 | [wp-111410517.pages.dev](https://wp-111410517.pages.dev)
+課程教材 | [html2server](https://github.com/ccc114b/html2server) / [W3Schools](https://www.w3schools.com/)

@@ -138,16 +138,16 @@ const sandboxConfigs = {
         dir: "homework/04",
         options: [
             { value: "hello.js", text: "hello.js ➔ 基礎控制台輸出", overrideUrl: "homework/03/hello.js" },
-            { value: "01_if_function.js", text: "1. 分數與等級轉換 (01_if_function.js)" },
-            { value: "02_for_function.js", text: "2. 指定範圍奇數求和 (02_for_function.js)" },
-            { value: "03_while_array.js", text: "3. 費氏數列生成陣列 (03_while_array.js)" },
-            { value: "04_object.js", text: "4. 學生資料物件與方法 (04_object.js)" },
-            { value: "05_json_object.js", text: "5. JSON 字串安全轉換與檢驗 (05_json_object.js)" },
-            { value: "06_array_for_if.js", text: "6. 陣列極值分析與尋找 (06_array_for_if.js)" },
-            { value: "07_function.js", text: "7. 遞迴階乘運算計算 (07_function.js)" },
-            { value: "08_json.js", text: "8. 巢狀 JSON 成員結構遍歷 (08_json.js)" },
-            { value: "09_array_for.js", text: "9. 陣列元素平方映射處理 (09_array_for.js)" },
-            { value: "10_object.js", text: "10. 銀行帳戶提存防溢物件 (10_object.js)" }
+            { value: "task01_score_grade.js", text: "1. 分數與等級轉換 (task01_score_grade.js)" },
+            { value: "task02_odd_sum.js", text: "2. 指定範圍奇數求和 (task02_odd_sum.js)" },
+            { value: "task03_fibonacci.js", text: "3. 費氏數列生成陣列 (task03_fibonacci.js)" },
+            { value: "task04_student_object.js", text: "4. 學生資料物件與方法 (task04_student_object.js)" },
+            { value: "task05_json_convert.js", text: "5. JSON 字串安全轉換與檢驗 (task05_json_convert.js)" },
+            { value: "task06_min_max.js", text: "6. 陣列極值分析與尋找 (task06_min_max.js)" },
+            { value: "task07_factorial.js", text: "7. 遞迴階乘運算計算 (task07_factorial.js)" },
+            { value: "task08_nested_json.js", text: "8. 巢狀 JSON 成員結構遍歷 (task08_nested_json.js)" },
+            { value: "task09_array_square.js", text: "9. 陣列元素平方映射處理 (task09_array_square.js)" },
+            { value: "task10_bank_account.js", text: "10. 銀行帳戶提存防溢物件 (task10_bank_account.js)" }
         ]
     },
     jsadvanced: {
@@ -295,62 +295,98 @@ function loadAcademicReport() {
     }
 }
 
-// 🌟 通用沙盒 eval() 模擬執行引擎 ( console.log 緩衝攔截器 )
+// 🌟 通用沙盒 Web Worker 隔離執行引擎 ( console.log 緩衝攔截與死鎖超時機制 )
 function runUniversalSandboxCode() {
     const outputConsole = document.getElementById("universal-terminal-output");
     if (!outputConsole) return;
 
     outputConsole.innerHTML = `<span class="terminal-prompt">$</span> sandbox run --execute\n`;
+    outputConsole.innerHTML += `⏳ SPINNING UP ISOLATED WEB WORKER THREAD...\n`;
 
-    const originalConsoleLog = console.log;
-    const originalConsoleError = console.error;
-    const originalConsoleWarn = console.warn;
+    // 1. 過濾 Node.js 特有的 require 依賴引用 (防沙盒崩潰)
+    let executableJsCode = currentlyLoadedCode.replace(/const\s+\w+\s*=\s*require\([^)]+\);?/g, "");
+    executableJsCode = executableJsCode.replace(/import\s+.*\s+from\s+.*;?/g, "");
 
-    const logBuffer = [];
-
-    // 重寫攔截
-    console.log = (...args) => {
-        logBuffer.push(`➔ ${args.join(" ")}`);
+    // 2. 封裝 Web Worker 原始碼字串
+    const workerCode = `
+    self.onmessage = function(e) {
+        const codeToRun = e.data;
+        const logBuffer = [];
+        
+        const customLog = (...args) => logBuffer.push("➔ " + args.join(" "));
+        const customError = (...args) => logBuffer.push("🚨 [ERROR] " + args.join(" "));
+        const customWarn = (...args) => logBuffer.push("⚠️ [WARN] " + args.join(" "));
+        
+        const sandboxEnv = {
+            console: {
+                log: customLog,
+                error: customError,
+                warn: customWarn
+            }
+        };
+        
+        try {
+            const executeInSandbox = new Function("console", "log", "error", "warn", codeToRun);
+            executeInSandbox(sandboxEnv.console, customLog, customError, customWarn);
+            self.postMessage({ success: true, logs: logBuffer });
+        } catch (err) {
+            self.postMessage({ success: false, error: err.name + ": " + err.message, logs: logBuffer });
+        }
     };
-    console.error = (...args) => {
-        logBuffer.push(`🚨 [ERROR] ${args.join(" ")}`);
-    };
-    console.warn = (...args) => {
-        logBuffer.push(`⚠️ [WARN] ${args.join(" ")}`);
-    };
+    `;
 
     try {
-        // 1. 過濾 Node.js 特有的 require 依賴引用 (防沙盒崩潰)
-        let executableJsCode = currentlyLoadedCode.replace(/const\s+\w+\s*=\s*require\([^)]+\);?/g, "");
-        executableJsCode = executableJsCode.replace(/import\s+.*\s+from\s+.*;?/g, "");
+        // 3. 利用 Blob 實現本地 file:// 協定無縫適配 (Object URL 降級方案)
+        const blob = new Blob([workerCode], { type: "application/javascript" });
+        const workerUrl = URL.createObjectURL(blob);
+        const sandboxWorker = new Worker(workerUrl);
 
-        // 2. 於安全氣泡沙盒中執行 eval()
-        eval(executableJsCode);
+        // 4. 2秒超時死鎖強行終止機制 (防禦 while(true) 等死迴圈鎖死主執行緒)
+        const timeoutLock = setTimeout(() => {
+            sandboxWorker.terminate();
+            URL.revokeObjectURL(workerUrl);
+            outputConsole.innerHTML += `🚨 [TIMEOUT CRASH] 執行逾時被強制中斷（檢測到 CPU 執行緒死鎖）！\n`;
+            outputConsole.innerHTML += `<span class="terminal-prompt">$</span> 異常中斷。`;
+            outputConsole.scrollTop = outputConsole.scrollHeight;
+        }, 2000);
 
-        // 還原
-        console.log = originalConsoleLog;
-        console.error = originalConsoleError;
-        console.warn = originalConsoleWarn;
+        sandboxWorker.onmessage = function(e) {
+            clearTimeout(timeoutLock);
+            URL.revokeObjectURL(workerUrl);
+            
+            const { success, logs, error } = e.data;
+            
+            if (logs && logs.length > 0) {
+                outputConsole.innerHTML += logs.join("\n") + "\n";
+            }
+            
+            if (success) {
+                if (!logs || logs.length === 0) {
+                    outputConsole.innerHTML += `➔ 程式執行成功，但無任何控制台輸出。\n`;
+                }
+            } else {
+                outputConsole.innerHTML += `🚨 [RUN-TIME CRASH] 執行異常拋錯:\n   ${error}\n`;
+            }
+            
+            outputConsole.innerHTML += `\n<span class="terminal-prompt">$</span> 執行結束。`;
+            outputConsole.scrollTop = outputConsole.scrollHeight;
+        };
 
-        // 3. 輸出至終端 DOM
-        if (logBuffer.length === 0) {
-            outputConsole.innerHTML += `➔ 程式執行成功，但無任何控制台輸出。\n`;
-        } else {
-            outputConsole.innerHTML += logBuffer.join("\n") + "\n";
-        }
-        outputConsole.innerHTML += `\n<span class="terminal-prompt">$</span> 執行結束。`;
+        sandboxWorker.onerror = function(err) {
+            clearTimeout(timeoutLock);
+            URL.revokeObjectURL(workerUrl);
+            outputConsole.innerHTML += `🚨 [THREAD ERROR] 隔離執行緒崩潰:\n   ${err.message}\n`;
+            outputConsole.innerHTML += `\n<span class="terminal-prompt">$</span> 異常中斷。`;
+            outputConsole.scrollTop = outputConsole.scrollHeight;
+        };
 
-    } catch (evalException) {
-        console.log = originalConsoleLog;
-        console.error = originalConsoleError;
-        console.warn = originalConsoleWarn;
+        // 啟動隔離執行緒
+        sandboxWorker.postMessage(executableJsCode);
 
-        outputConsole.innerHTML += `🚨 [RUN-TIME CRASH] 執行異常拋錯:\n   ${evalException.name}: ${evalException.message}\n`;
-        outputConsole.innerHTML += `\n<span class="terminal-prompt">$</span> 異常中斷。`;
+    } catch (e) {
+        outputConsole.innerHTML += `🚨 [SANDBOX ERROR] 無法創建沙盒環境: ${e.message}\n`;
+        outputConsole.scrollTop = outputConsole.scrollHeight;
     }
-
-    // 自動滾動到底部
-    outputConsole.scrollTop = outputConsole.scrollHeight;
 }
 
 // ------------------------------------------
@@ -514,8 +550,45 @@ function executePublishPost() {
         const privateCheck = document.getElementById("blog-is-private");
         if (privateCheck) privateCheck.checked = false;
         
-        // 重新同步邊緣貼文
-        fetchBlogPosts();
+        // 🌟 鋼鐵防避：樂觀 UI 更新 (Optimistic Update)
+        // 直接在前端即時無延遲插入，規避 KV 資料庫最終一致性全球廣播的同步延遲缺陷
+        const feed = document.getElementById("blog-posts-feed");
+        if (feed) {
+            if (feed.innerHTML.includes("NO ARTICLES IN BLOG KEY-VALUE RECORD.")) {
+                feed.innerHTML = "";
+            }
+            
+            const card = document.createElement("div");
+            card.className = "post-card optimistic-post";
+            
+            const now = new Date();
+            const formattedDate = now.toLocaleString("zh-TW", { timeZone: "Asia/Taipei" });
+            const isPrivateBadge = isPrivate ? ` <span style="color:var(--accent-red); font-weight:700;">[🔒 PRIVATE]</span>` : "";
+
+            card.innerHTML = `
+                <div>
+                    <div class="post-meta-row">
+                        <span class="author">@${currentActiveUsername}${isPrivateBadge}</span>
+                        <span class="time">${formattedDate} (剛剛)</span>
+                    </div>
+                    <p class="post-content">${content}</p>
+                </div>
+                <div class="post-action-bar">
+                    <span class="likes-count">♥ 0 LIKES</span>
+                </div>
+            `;
+            
+            // 將樂觀貼文滑動滑入最上方
+            feed.insertBefore(card, feed.firstChild);
+            
+            card.style.opacity = "0";
+            card.style.transform = "translateY(-10px)";
+            card.style.transition = "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)";
+            setTimeout(() => {
+                card.style.opacity = "1";
+                card.style.transform = "translateY(0)";
+            }, 50);
+        }
     })
     .catch(err => {
         alert(`❌ 發文異常: ${err.message}`);
